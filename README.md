@@ -1,5 +1,5 @@
 # Spin-Fm
-Linux Pyqt5 filemanager
+Linux Pyqt5/Python3 filemanager
 
 ![dark](https://user-images.githubusercontent.com/29865797/144905768-8616ce0a-862c-4c18-8ec8-d0dd48d73df3.jpg)
 
