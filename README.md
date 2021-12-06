@@ -20,7 +20,7 @@ Features.
 - CSS theme support with changable themes.
 
 
-<b> About copying and moving: You are better off clicking an object and then pressing and holding Ctrl while selecting all your objects. On some occasions, Experienced issues while selecting purely with a mouse.</b>
+<b> About copying and moving: You are better off clicking an object and then pressing and holding Ctrl while selecting all your objects. On some occasions,I experienced issues while selecting purely with a mouse.</b>
 
 
                                                                                                                                                 
