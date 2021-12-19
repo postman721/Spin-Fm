@@ -49,10 +49,10 @@ QMainWindow {
  
 
 QPushButton:hover:!pressed{
-  border: 1px solid yellow;
+  color:blue;;
 }
 
 QPushButton{
-  border: 2px solid black;
+  color: blue;;
 }
 

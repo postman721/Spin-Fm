@@ -1,4 +1,4 @@
-#Spin FM v. 1.0 Copyright (c) 2021 JJ Posti <techtimejourney.net> This program comes with ABSOLUTELY NO WARRANTY; for details see: http://www.gnu.org/copyleft/gpl.html.  This is free software, and you are welcome to redistribute it under GPL Version 2, June 1991")
+#Spin FM v. 1.1 Copyright (c) 2021 JJ Posti <techtimejourney.net> This program comes with ABSOLUTELY NO WARRANTY; for details see: http://www.gnu.org/copyleft/gpl.html.  This is free software, and you are welcome to redistribute it under GPL Version 2, June 1991")
 #!/usr/bin/env python3
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
@@ -47,11 +47,25 @@ class Main(QMainWindow):
         self.image_button.setToolTip('Open an image')
         self.image_button.clicked.connect(self.images) 
                         
+## Next
+        self.next_button = QPushButton('<-', self)
+        #self.next_button.setCheckable(True)
+        self.next_button.setToolTip('->')
+        self.next_button.clicked.connect(self.changed) 
+
+## Previous
+        self.prev_button = QPushButton('->', self)
+        self.prev_button.setToolTip('->')
+        self.prev_button.clicked.connect(self.changed2) 
           
 #Toolbars        
         self.toolbar=QToolBar()
-        self.toolbar.addWidget( self.image_button)
+        self.toolbar.addWidget(self.image_button)
+        self.toolbar.addWidget(self.next_button)
+
         self.toolbar.addWidget(self.address)
+        self.toolbar.addWidget(self.prev_button)
+
         self.toolbar2=QToolBar()
         self.toolbar2.hide()
                         
@@ -69,6 +83,7 @@ class Main(QMainWindow):
         self.treeview.clicked.connect(self.on_treeview2_clicked)
         self.treeview.doubleClicked.connect(self.doubles)
         self.treeview.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        
 
 #Into icon mode and standard aligment
         self.treeview.setFlow(QListView.LeftToRight)
@@ -83,6 +98,11 @@ class Main(QMainWindow):
 #Action list & image holder
         self.actions=[]                    
         self.image = QLabel(self)
+#Go back list
+        self.pathme=[]   
+        
+#Go forward list
+        self.pathme2=[]             
 ################################
 #Layouts
 ################################          
@@ -101,7 +121,7 @@ class Main(QMainWindow):
 ##############
 #List function
 ###############
-    def clicked(self,current,previous):        
+    def clicked(self,current):        
         current=self.list.currentItem().text()
         if current == "Home":
             self.name=getpass.getuser()
@@ -266,7 +286,7 @@ class Main(QMainWindow):
 #About messagebox
 ################################
     def about(self):
-        buttonReply = QMessageBox.question(self, 'Spin FM v.1.0 beta Copyright(c)2021 JJ Posti <techtimejourney.net>', "Spin FM is a spinoff of Sequence FM filemanager.The program comes with ABSOLUTELY NO WARRANTY  for details see: http://www.gnu.org/copyleft/gpl.html. This is free software, and you are welcome to redistribute it under GPL Version 2, June 1991.", QMessageBox.Ok )
+        buttonReply = QMessageBox.question(self, 'Spin FM v.1.1 beta Copyright(c)2021 JJ Posti <techtimejourney.net>', "Spin FM is a spinoff of Sequence FM filemanager.The program comes with ABSOLUTELY NO WARRANTY  for details see: http://www.gnu.org/copyleft/gpl.html. This is free software, and you are welcome to redistribute it under GPL Version 2, June 1991.", QMessageBox.Ok )
         if buttonReply == QMessageBox.Ok:
             print('Ok clicked, messagebox closed.')                
 ################################
@@ -281,6 +301,23 @@ class Main(QMainWindow):
             self.treeview.model.setRootPath(filepath)
             self.treeview.setRootIndex(self.treeview.model.index(filepath))
             self.basic=os.path.basename(self.path)
+#Paths: Go back / Forward 
+        self.pathme.append(filepath)
+        for lines in self.pathme:
+            x=lines.encode('utf-8')
+            y=x.decode('unicode-escape')
+            self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+            print ("Back to me: " +  self.baseline)
+            
+#Go Forward 
+        self.pathme2.append(filepath)
+        for lines in self.pathme2:
+            x2=lines.encode('utf-8')
+            y2=x2.decode('unicode-escape')
+            self.baseline2=os.path.dirname(y2)
+            print ("Forward to me: " +  y2)            
+                        
+            
                             		                                
     def on_treeview2_clicked(self, index):
         indexItem = self.treeview.model.index(index.row(), 0, index.parent())
@@ -299,6 +336,43 @@ class Main(QMainWindow):
         x=str(filetype.file(filepath))
         self.status.showMessage(str( filepath + "  Size on mb: " + size_mb + "  Size on kb:  " + size_kb + "  Last modifed:  " + local_time + " Filetype: " + x))
         self.basic=os.path.basename(self.path)
+        self.address.setText(self.baseline)
+
+#Going back button function        
+    def changed(self,current):
+        if not current:
+            current = self.address.text()                      
+            for lines in self.pathme:
+                x=lines.encode('utf-8')
+                y=x.decode('unicode-escape')
+                self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+            print ("Going back to me: " +  self.baseline)    
+            self.treeview.model.setRootPath(self.baseline)
+            self.treeview.setRootIndex(self.treeview.model.index(self.baseline))
+            self.treeview.model.setRootPath(self.baseline)
+            self.treeview.setRootIndex(self.treeview.model.index(self.baseline))
+            self.status.showMessage(self.baseline)
+            self.basic=os.path.basename(self.baseline)
+            self.address.setText(self.path)
+            
+#Going forward button function        
+    def changed2(self,current):
+        if not current:
+            current = self.address.text()                      
+            for lines in self.pathme2:
+                x2=lines.encode('utf-8')
+                y2=x2.decode('unicode-escape')
+                self.baseline2=y2
+            print ("Forward to me: " +  self.baseline2)
+            
+            self.treeview.model.setRootPath(self.baseline2)
+            self.treeview.setRootIndex(self.treeview.model.index(self.baseline2))
+            self.treeview.model.setRootPath(self.baseline2)
+            self.treeview.setRootIndex(self.treeview.model.index(self.baseline2))
+            self.status.showMessage(self.baseline2)
+            self.basic=os.path.dirname(self.baseline2)
+            self.address.setText(self.baseline2)            
+
 ################################
 #Navigation
 ################################
@@ -321,14 +395,19 @@ class Main(QMainWindow):
 #Open With program
 ################################
     def opens_me(self):        
-        openme=self.address.text()
+        openme=filepath
         text, ok = QInputDialog.getText(self, 'Open with a program', ' \n Type the name of the program, which you want to use. ')
         if ok:
             try:
                 print (text)
-                subprocess.Popen([text,  openme])                                                                        
+                if os.path.isdir(openme):
+                    print("This is a folder. Not opening")
+                else:
+                    subprocess.Popen([text,  openme])
             except Exception as e:
-                print (e)                
+                print (e)     
+        						                                                                               
+                           
              				
 ################################
 #Move an object 
