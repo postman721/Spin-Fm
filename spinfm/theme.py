@@ -7,6 +7,6 @@
 		# 	"blue"    # Blue theme.
 		#   ""		  # Basic QT without CSS theming.
 
-theme="blue"
+theme="dark"
 
 
