@@ -1,1 +1,1 @@
-Spin-FM 1.0 - beta
+Spin-FM 1.1 - beta
