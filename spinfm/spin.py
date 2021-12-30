@@ -60,12 +60,11 @@ class Main(QMainWindow):
           
 #Toolbars        
         self.toolbar=QToolBar()
-        self.toolbar.addWidget(self.image_button)
         self.toolbar.addWidget(self.next_button)
 
         self.toolbar.addWidget(self.address)
         self.toolbar.addWidget(self.prev_button)
-
+        self.toolbar.addWidget(self.image_button)
         self.toolbar2=QToolBar()
         self.toolbar2.hide()
                         
@@ -346,38 +345,42 @@ class Main(QMainWindow):
 #Going back button function        
     def changed(self,current):
         if not current:
-            current = self.address.text()                      
-            for lines in self.pathme:
-                x=lines.encode('utf-8')
-                y=x.decode('unicode-escape')
-                self.baseline=os.path.abspath(os.path.join(y, os.pardir))
-            print ("Going back to me: " +  self.baseline)    
-            self.treeview.model.setRootPath(self.baseline)
-            self.treeview.setRootIndex(self.treeview.model.index(self.baseline))
-            self.treeview.model.setRootPath(self.baseline)
-            self.treeview.setRootIndex(self.treeview.model.index(self.baseline))
-            self.status.showMessage(self.baseline)
-            self.basic=os.path.basename(self.baseline)
-            self.address.setText(self.path)
-            
+            current = self.address.text()
+            try:                      
+                for lines in self.pathme:
+                    x=lines.encode('utf-8')
+                    y=x.decode('unicode-escape')
+                    self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+                    print ("Going back to me: " +  self.baseline)    
+                    self.treeview.model.setRootPath(self.baseline)
+                    self.treeview.setRootIndex(self.treeview.model.index(self.baseline))
+                    self.treeview.model.setRootPath(self.baseline)
+                    self.treeview.setRootIndex(self.treeview.model.index(self.baseline))
+                    self.status.showMessage(self.baseline)
+                    self.basic=os.path.basename(self.baseline)
+                    self.address.setText(self.path)
+            except Exception as e:
+                print (e) 
 #Going forward button function        
     def changed2(self,current):
         if not current:
-            current = self.address.text()                      
-            for lines in self.pathme2:
-                x2=lines.encode('utf-8')
-                y2=x2.decode('unicode-escape')
-                self.baseline2=y2
-            print ("Forward to me: " +  self.baseline2)
+            try:
+                current = self.address.text()                      
+                for lines in self.pathme2:
+                    x2=lines.encode('utf-8')
+                    y2=x2.decode('unicode-escape')
+                    self.baseline2=y2
+                    print ("Forward to me: " +  self.baseline2)
             
-            self.treeview.model.setRootPath(self.baseline2)
-            self.treeview.setRootIndex(self.treeview.model.index(self.baseline2))
-            self.treeview.model.setRootPath(self.baseline2)
-            self.treeview.setRootIndex(self.treeview.model.index(self.baseline2))
-            self.status.showMessage(self.baseline2)
-            self.basic=os.path.dirname(self.baseline2)
-            self.address.setText(self.baseline2)            
-
+                    self.treeview.model.setRootPath(self.baseline2)
+                    self.treeview.setRootIndex(self.treeview.model.index(self.baseline2))
+                    self.treeview.model.setRootPath(self.baseline2)
+                    self.treeview.setRootIndex(self.treeview.model.index(self.baseline2))
+                    self.status.showMessage(self.baseline2)
+                    self.basic=os.path.dirname(self.baseline2)
+                    self.address.setText(self.baseline2)            
+            except Exception as e:
+                print (e)
 ################################
 #Navigation
 ################################
