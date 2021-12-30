@@ -303,41 +303,46 @@ class Main(QMainWindow):
             self.basic=os.path.basename(self.path)
 #Paths: Go back / Forward 
         self.pathme.append(filepath)
-        for lines in self.pathme:
-            x=lines.encode('utf-8')
-            y=x.decode('unicode-escape')
-            self.baseline=os.path.abspath(os.path.join(y, os.pardir))
-            print ("Back to me: " +  self.baseline)
-            
+        try:
+            for lines in self.pathme:
+                x=lines.encode('utf-8')
+                y=x.decode('unicode-escape')
+                self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+                print ("Back to me: " +  self.baseline)
+        except Exception as e:
+            print (e)	    
 #Go Forward 
         self.pathme2.append(filepath)
-        for lines in self.pathme2:
-            x2=lines.encode('utf-8')
-            y2=x2.decode('unicode-escape')
-            self.baseline2=os.path.dirname(y2)
-            print ("Forward to me: " +  y2)            
-                        
+        try:
+            for lines in self.pathme2:
+                x2=lines.encode('utf-8')
+                y2=x2.decode('unicode-escape')
+                self.baseline2=os.path.dirname(y2)
+                print ("Forward to me: " +  y2)            
+        except Exception as e:
+            print (e)	               
             
                             		                                
     def on_treeview2_clicked(self, index):
-        indexItem = self.treeview.model.index(index.row(), 0, index.parent())
-        global filepath
-        filepath = self.treeview.model.filePath(indexItem)
-        print(filepath)
-        self.address.setText(filepath)
-        #File info
-        self.info = os.stat(filepath) 
-        size_mb=(str(self.info.st_size / (1024 * 1024)))
-        size_kb=(str("%.2f" % round(self.info.st_size / (1024.0))))
-        modified=(os.path.getmtime(filepath))
-        local_time=(str(time.ctime(modified)))
-        filetype = magic.open(magic.MAGIC_MIME)
-        filetype.load()
-        x=str(filetype.file(filepath))
-        self.status.showMessage(str( filepath + "  Size on mb: " + size_mb + "  Size on kb:  " + size_kb + "  Last modifed:  " + local_time + " Filetype: " + x))
-        self.basic=os.path.basename(self.path)
-        self.address.setText(self.baseline)
-
+        try:		
+            indexItem = self.treeview.model.index(index.row(), 0, index.parent())
+            global filepath
+            filepath = self.treeview.model.filePath(indexItem)
+            print(filepath)
+            self.address.setText(filepath)
+            #File info
+            self.info = os.stat(filepath) 
+            size_mb=(str(self.info.st_size / (1024 * 1024)))
+            size_kb=(str("%.2f" % round(self.info.st_size / (1024.0))))
+            modified=(os.path.getmtime(filepath))
+            local_time=(str(time.ctime(modified)))
+            filetype = magic.open(magic.MAGIC_MIME)
+            filetype.load()
+            x=str(filetype.file(filepath))
+            self.status.showMessage(str( filepath + "  Size on mb: " + size_mb + "  Size on kb:  " + size_kb + "  Last modifed:  " + local_time + " Filetype: " + x))
+            self.basic=os.path.basename(self.path)
+        except Exception as e:
+            print (e)	
 #Going back button function        
     def changed(self,current):
         if not current:
@@ -577,10 +582,10 @@ class Theme(Main):
 ################################
     def theme(self):
         if theme == "dark":
-            with open("./themes/dark.css","r") as style:
+            with open("/usr/share/sthemes/dark.css","r") as style:
                 self.setStyleSheet(style.read())
         if theme == "blue":
-            with open("./themes/blue.css","r") as style:
+            with open("/usr/share/sthemes/blue.css","r") as style:
                 self.setStyleSheet(style.read())                                   			        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
