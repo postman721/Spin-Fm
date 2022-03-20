@@ -1,5 +1,18 @@
 
-Spin FM filemanager v 1.1 Beta Copyright JJ Posti <techtimejourney.net> 2021
+Spin FM filemanager v 2.0 Beta Copyright JJ Posti <techtimejourney.net> 2021
+
+2.0 Beta new features - Sunday 20th of March 2022:
+- Tab support added.
+- Plenty of code fixes.
+- Theme fixes.
+
+<b> Please notice that this is still a beta release. There might be issues on the code of this release. Be cautious when using.</b>
+
+
+![Default_theme](https://user-images.githubusercontent.com/29865797/159177058-d34c2820-7987-4038-bb27-724251f5cfff.jpg)
+
+
+![Alternative_theme](https://user-images.githubusercontent.com/29865797/159177060-9da1b347-e5e0-4762-ba51-8bd0873c0b0f.jpg)
 
 Features. 
 
