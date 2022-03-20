@@ -1,1 +1,1 @@
-Spin-FM 1.1 - beta
+Spin-FM 2.0 - Development branch.
