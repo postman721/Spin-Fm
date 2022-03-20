@@ -38,9 +38,9 @@ To use Sequence FM you should have, at least, these installed (Debian base as an
 sudo apt-get install python-pyqt5 python python3 python3-magic
 
 
-Planned features for future releases:
 
-- Navigate with arrows.
-- Tabbed interface support.
+### Planned features for future releases:
+
+
 - Better integrations with Linux system default applications.
 - More themes.
