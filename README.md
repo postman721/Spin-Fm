@@ -13,7 +13,7 @@ Quick installation.
 
 - Place sfm.py and theme.py under same folder.
 
-- Copy: sthemes folder to /usr/share/sthemes:  <b> sudo cp -R sthemes /usr/share/sthemes </b>
+- Copy: sthemes folder to /usr/share/sthemes:  <b> sudo cp -R themes /usr/share/sthemes </b>
 
 - Go into the folder containing sfm.py and theme.py, make those files executable: <b> chmod +x sfm.py theme.py </b>
 
