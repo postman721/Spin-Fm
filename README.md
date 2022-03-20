@@ -6,6 +6,8 @@ Spin FM filemanager v 2.0 Beta Copyright JJ Posti <techtimejourney.net> 2021
 - Plenty of code fixes.
 - Theme fixes.
 
+- Known issues to be fixed in a near future: Tab focus does not work as expected. If new tab is created, then the filemanager has issues when trying to focus back on the previous tab's file content. 
+
 <b> Please notice that this is still a beta release. There might be issues on the code of this release. Be cautious when using.</b>
 
 
