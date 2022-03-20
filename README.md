@@ -9,6 +9,16 @@ Spin FM filemanager v 2.0 Beta Copyright JJ Posti <techtimejourney.net> 2021
 <b> Please notice that this is still a beta release. There might be issues on the code of this release. Be cautious when using.</b>
 
 
+Quick installation. 
+
+- Place sfm.py and theme.py under same folder.
+
+- Copy: sthemes folder to /usr/share/sthemes:  <b> sudo cp -R sthemes /usr/share/sthemes </b>
+
+- Go into the folder containing sfm.py and theme.py, make those files executable: <b> chmod +x sfm.py theme.py </b>
+
+- Run Spin-FM from the folder: <b> python3 sfm.py </b>
+
 ![Default_theme](https://user-images.githubusercontent.com/29865797/159177058-d34c2820-7987-4038-bb27-724251f5cfff.jpg)
 
 
