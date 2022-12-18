@@ -23,11 +23,13 @@ sudo apt install pyside2-*
 
 When the content of the folder or location changes and does not seem to refresh, remember to refresh the tree via addressbar navigation. For example: Type /home and hit return/enter from the keyboard.
 
-<b> Do not paint <b/> your selections for copying, moving or deleting: This will likely cause non-functionality. Press CTRL and point and click through the objects. After selected, right-click and choose proper menu action. For copying and moving: Select for copying or moving. For deletion: Delete objects.
-   
- After copying or moving selection navigate to your target location and choose Copy to.. or Move to... from the right-click menu. 
- 
- Deletion will try to deliver the objects to trash folder. 
+<b>Do not paint your selections for copying, moving or deletion</b>: This will likely cause non-functionality. Press CTRL and point and click through the objects. 
+
+After selected, right-click and choose proper menu action. 
+
+For copying and moving: Select for copying or moving. For deletion: Delete objects. 
+
+After copying or moving selection, navigate to your target location and choose Copy to.. or Move to... from the right-click menu.
 
 <br>
 <br>
