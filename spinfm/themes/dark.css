@@ -1,20 +1,43 @@
 
+*{
+    background-color: #1b1b1b;
+    color: white;}
 
-*{background-color: #1b1b1b;color: white;}
 
 QMenu
-{color: #e3e0d8;background-color: #1b1b1b;selection-background-color:#080912;selection-color: #ffffff;}
+{
+    color: #e3e0d8;
+    background-color: #1b1b1b;
+    selection-background-color:#080912;
+    selection-color: #ffffff;
+  
+}
 
-QWidget:item:hover {background-color: #3f3f40;color: #ffffff;}
+QWidget:item:hover
+{
+    background-color: #3f3f40;
+    color: #ffffff;
+}
 
-QWidget:item:selected {background-color: #080912;}
+QWidget:item:selected
+{
+    background-color: #3f3f40;
+}
 
-QTabBar:tab:selected {background: gray;}
+QStatusBar {
+    height: 4px;
+    background-color: #1b1b1b;
+    color: #ffffff;
+} 
+
+QMainWindow {
+    background-color: #343232	;
+    color: #ffffff;
+} 
+QPushButton {
+    background-color: #01081f	;
+    color: white;
+} 
 
 
-QStatusBar {height: 4px; background-color: #5b5c5b;color: #ffffff;} 
-
-QPushButton {background-color: #5b5c5b; color: white;} 
-
-QWidget {background-color: #5b5c5b;}
 

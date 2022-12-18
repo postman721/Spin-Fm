@@ -1,0 +1,24 @@
+
+
+*{background-color: #003C00;color: white;}
+
+QMenu
+{color: #ffffff;background-color: #003C00;selection-background-color:#5b5c5b;selection-color: #ffffff;}
+
+QWidget:item:hover {background-color: #3f3f40;color: #ffffff;}
+
+QWidget:item:selected {background-color: #5b5c5b;}
+
+QTabBar:tab:selected {background: 006400;}
+
+
+QStatusBar {height: 4px; background-color:#003C00;color: #ffffff;} 
+
+QPushButton {background-color: #5b5c5b; color: white;} 
+
+QWidget {background-color: #003C00;}
+
+QInputDialog{{background-color: #003366;color: white;}
+ 
+
+
