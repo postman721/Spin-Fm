@@ -1,5 +1,5 @@
 
-Spin FM filemanager v 2.0 Beta Copyright JJ Posti <techtimejourney.net> 2021
+Spin FM filemanager v 2.0 RC1 Copyright JJ Posti <techtimejourney.net> 2021
 
 2.0 RC1 new features - Sunday 18th of December 2022
 
