@@ -15,6 +15,11 @@ sudo apt install pyside2-*
 
 - Green theme added.
 
+- Removing permanent delete, due to its risks 
+
+- Please notice that on all file & folder actions, the addressbar object name tells what is being processed.
+
+- Back and forward store only the most recent locations.
 
 <br>
 <br>
