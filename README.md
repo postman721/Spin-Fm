@@ -11,8 +11,8 @@ sudo apt install pyside2-*
 
 - Copy, paste, move to functionalities improved.
 
-
-
+<br>
+<br>
 
 2.0 Beta new features - Sunday 20th of March 2022:
 - Tab support added.
