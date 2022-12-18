@@ -23,7 +23,7 @@ sudo apt install pyside2-*
 
 When the content of the folder or location changes and does not seem to refresh, remember to refresh the tree via addressbar navigation. For example: Type /home and hit return/enter from the keyboard.
 
-<b>Do not paint your selections for copying, moving or deletion</b>: This will likely cause issues. Press CTRL and point and click through the objects. 
+<b>Do not paint your selections for copying, moving or deletion with a mouse</b>: This will likely cause issues. Press CTRL and point and click through the objects. 
 
 After selected, right-click and choose a proper menu action. 
 
