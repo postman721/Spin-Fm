@@ -1,6 +1,19 @@
 
 Spin FM filemanager v 2.0 Beta Copyright JJ Posti <techtimejourney.net> 2021
 
+2.0 RC1 new features - Sunday 18th of December 2022
+
+Moving to Pyside2:
+
+sudo apt install pyside2-*
+
+- Close tabs button added: This will always close the latest opened tab.
+
+- Copy, paste, move to functionalities improved.
+
+
+
+
 2.0 Beta new features - Sunday 20th of March 2022:
 - Tab support added.
 - Plenty of code fixes.
@@ -21,10 +34,13 @@ Quick installation.
 
 - Run Spin-FM from the folder: <b> python3 sfm.py </b>
 
-![Default_theme](https://user-images.githubusercontent.com/29865797/159177058-d34c2820-7987-4038-bb27-724251f5cfff.jpg)
+![sfm2](https://user-images.githubusercontent.com/29865797/208311074-e4d040ed-0c51-4df0-8b53-623b37ba97fd.jpg)
+
+![Alternative theme1](https://user-images.githubusercontent.com/29865797/208311079-bb9a26e1-0895-46a9-aca9-aec86d013139.png)
+![sfm2](https://user-images.githubusercontent.com/29865797/208311080-bffd7e0f-2278-
 
 
-![Alternative_theme](https://user-images.githubusercontent.com/29865797/159177060-9da1b347-e5e0-4762-ba51-8bd0873c0b0f.jpg)
+![Alternative_theme2](https://user-images.githubusercontent.com/29865797/159177060-9da1b347-e5e0-4762-ba51-8bd0873c0b0f.jpg)
 
 Features. 
 
