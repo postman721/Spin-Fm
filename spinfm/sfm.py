@@ -1,17 +1,14 @@
 #Spin FM v. 2.0 Copyright (c) 2021 JJ Posti <techtimejourney.net> This program comes with ABSOLUTELY NO WARRANTY; for details see: http://www.gnu.org/copyleft/gpl.html.  This is free software, and you are welcome to redistribute it under GPL Version 2, June 1991")
 #!/usr/bin/env python3
-import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QWidget, QAction, QTabWidget,QVBoxLayout
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import pyqtSlot
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-import os, sys, subprocess, getpass,copy, shutil, time, urllib
-from copy import deepcopy
-import magic
+import os, sys, subprocess, getpass,copy, shutil, time, urllib,magic
+from PySide2 import QtCore, QtGui, QtWidgets
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
+from copy import deepcopy 
 from theme import * 
+from add_tabs import *
+
 class App(QMainWindow):
 
     def __init__(self):
@@ -21,7 +18,6 @@ class App(QMainWindow):
         self.initUI()
     def initUI(self):
         self.setWindowTitle(self.title)
-        self.move(QApplication.desktop().screen().rect().center()- self.rect().center())
         self.resize(900,600)
         self.tabs_widget = Tabs(self)
         self.setCentralWidget(self.tabs_widget)
@@ -35,26 +31,33 @@ class App(QMainWindow):
                 self.setStyleSheet(style.read())
         if theme == "blue":
             with open("/usr/share/sthemes/blue.css","r") as style:
-                self.setStyleSheet(style.read()) 
-
+                self.setStyleSheet(style.read())
+        if theme == "green":
+            with open("/usr/share/sthemes/green.css","r") as style:
+                self.setStyleSheet(style.read())                 
     
 class Tabs(QWidget):
     
     def __init__(self, parent):
-        super(QWidget, self).__init__(parent)
+        super(Tabs, self).__init__(parent)
         self.theme()
         self.layout = QVBoxLayout(self)
-#Next
-        self.next_button = QPushButton('<-', self)
-        self.next_button.setToolTip('->')
-        self.next_button.clicked.connect(self.changed) 
 
 #Previous
-        self.prev_button = QPushButton('->', self)
-        self.prev_button.setToolTip('->')
-        self.prev_button.clicked.connect(self.changed2) 
+        self.prev_button = QPushButton('<-', self)
+        self.prev_button.setToolTip('<-')
+        self.prev_button.clicked.connect(self.changed)
+        self.prev_button.clicked.connect(self.changed3) 
+        self.prev_button.clicked.connect(self.changed5)         
+        self.prev_button.clicked.connect(self.changed7)         
 
-
+#Next
+        self.next_button = QPushButton('->', self)
+        self.next_button.setToolTip('->')
+        self.next_button.clicked.connect(self.changed2) 
+        self.next_button.clicked.connect(self.changed4) 
+        self.next_button.clicked.connect(self.changed6) 
+        self.next_button.clicked.connect(self.changed8)         
 #Address bar
         self.address=QLineEdit()
         self.name=getpass.getuser()
@@ -62,28 +65,63 @@ class Tabs(QWidget):
         self.combine=self.home + self.name 
         self.address.setText(self.combine)
         self.address.setAlignment(Qt.AlignCenter)
-        self.address.returnPressed.connect(self.navigate)         
+        self.address.returnPressed.connect(self.navigate)
+           
 #Statusbar
         self.status=QStatusBar()
+        
+#Add and close tabs
+        self.close_button = QPushButton('Close tabs', self)
+        self.close_button.setToolTip('Close tabs.')
+        self.close_button.clicked.connect(self.close_tab) 
+
 
 #Toolbars        
         self.toolbar=QToolBar()
-        self.toolbar.addWidget(self.next_button)
-        self.toolbar.addWidget(self.address)
         self.toolbar.addWidget(self.prev_button)
+        self.toolbar.addWidget(self.address)
+        self.toolbar.addWidget(self.next_button)
+        self.toolbar.addWidget(self.close_button)
                      
 #Initialize tab screen
         self.tabs = QTabWidget()
-        self.tabs.setTabsClosable(True)
-        self.tabs.addTab(self.new_tabs(), "Tab")
         self.tabs.tabCloseRequested.connect(self.close_tab)
-        self.tabs.tabBarDoubleClicked.connect(self.new_tabs)
+        self.tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
+        self.setStyleSheet('''
+        QTabWidget::tab-bar {
+            alignment: center;
+        }''')
+#First tab
+        self.tab0 = QListView()      
+        self.tab0.model = QFileSystemModel()
+        self.tab0.model.setFilter(QDir.AllDirs | QDir.Files | QDir.NoDotAndDotDot)
+        self.name=getpass.getuser()
+        self.home="/home/"
+        self.path=  self.home + self.name
+        self.tab0.model.setRootPath(self.path)
+        self.tab0.setModel(self.tab0.model)
+        self.tab0.setRootIndex(self.tab0.model.index(self.path))
+        self.tab0.setSelectionMode(QAbstractItemView.ExtendedSelection)
+#Into icon mode and standard aligment
+        self.tab0.setFlow(QListView.LeftToRight)
+        self.tab0.setResizeMode(QListView.Adjust)
+        self.tab0.setViewMode(QListView.IconMode)
+        self.tab0.setGridSize(QtCore.QSize(84, 84))		  
+        ix = self.tabs.addTab(self.tab0, "Tab")
+        self.tabs.setCurrentIndex(ix)
+        currentIndex=self.tabs.currentIndex()
+        currentWidget=self.tabs.currentWidget()
+        print(currentIndex)
+        self.tabs.setTabText(currentIndex, str("Tab "+str(currentIndex)))
+        self.tab0.clicked.connect(self.on_treeview2_clicked)
         
+        self.tab0.doubleClicked.connect(self.doubles)
+                
 #Create Layouts
-        self.tab1.layout = QHBoxLayout(self)
-        self.tab1.setLayout(self.tab1.layout)
+        self.tab0.layout = QHBoxLayout(self)
+        self.tab0.setLayout(self.tab0.layout)
         
-        self.tab1.vertical = QVBoxLayout(self)
+        self.tab0.vertical = QVBoxLayout(self)
         self.layout.addWidget(self.toolbar)
         self.layout.addWidget(self.tabs)
 
@@ -107,7 +145,6 @@ class Tabs(QWidget):
 #################################
 #Functions begin.
 #################################
-
 #Theme from theme.py
     def theme(self):
         if theme == "dark":
@@ -115,20 +152,68 @@ class Tabs(QWidget):
                 self.setStyleSheet(style.read())
         if theme == "blue":
             with open("/usr/share/sthemes/blue.css","r") as style:
-                self.setStyleSheet(style.read()) 
+                self.setStyleSheet(style.read())               
+        if theme == "green":
+            with open("/usr/share/sthemes/green.css","r") as style:
+                self.setStyleSheet(style.read())                    
 #Button connectors
-    @pyqtSlot()
     def open_with_clicked(self):
         try:
             self.opens_me()
         except Exception as e:
             print (e)	
- 
+
+##########################
+#Index 0 back & Forward
+###########################
 #Going back button function        
     def changed(self,current):
-        if not current:
-            current = self.address.text()
-            try:                      
+        if self.tabs.currentIndex() == 0:
+            try:
+                self.prev_button.clicked.connect(self.changed)				                      
+                for lines in self.pathme:
+                    x=lines.encode('utf-8')
+                    y=x.decode('unicode-escape')
+                    self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+                    print ("Going back to me: " +  self.baseline)    
+                    self.tab0.model.setRootPath(self.baseline)
+                    self.tab0.setRootIndex(self.tab0.model.index(self.baseline))
+                    self.tab0.model.setRootPath(self.baseline)
+                    self.tab0.setRootIndex(self.tab0.model.index(self.baseline))
+                    self.status.showMessage(self.baseline)
+                    self.basic=os.path.basename(self.baseline)
+                    self.address.setText(self.path)
+            except Exception as e:
+                print (e) 
+#Going forward button function        
+    def changed2(self,current):
+        if self.tabs.currentIndex() == 0:
+            try:
+                self.next_button.clicked.connect(self.changed2) 
+                for lines in self.pathme2:
+                    x2=lines.encode('utf-8')
+                    y2=x2.decode('unicode-escape')
+                    self.baseline2=y2
+                    print ("Forward to me: " +  self.baseline2)
+            
+                    self.tab0.model.setRootPath(self.baseline2)
+                    self.tab0.setRootIndex(self.tab0.model.index(self.baseline2))
+                    self.tab0.model.setRootPath(self.baseline2)
+                    self.tab0.setRootIndex(self.tab0.model.index(self.baseline2))
+                    self.status.showMessage(self.baseline2)
+                    self.basic=os.path.dirname(self.baseline2)
+                    self.address.setText(self.baseline2)            
+            except Exception as e:
+                print (e)
+
+##########################
+#Index 1 back & Forward
+###########################
+#Going back button function        
+    def changed3(self,current):
+        if self.tabs.currentIndex() == 1:                                             			
+            try:  
+                self.prev_button.clicked.connect(self.changed3)                			                    
                 for lines in self.pathme:
                     x=lines.encode('utf-8')
                     y=x.decode('unicode-escape')
@@ -140,15 +225,14 @@ class Tabs(QWidget):
                     self.tab1.setRootIndex(self.tab1.model.index(self.baseline))
                     self.status.showMessage(self.baseline)
                     self.basic=os.path.basename(self.baseline)
-                    self.address.setText(self.path)
+                    self.address.setText(self.baseline)
             except Exception as e:
                 print (e) 
-                
 #Going forward button function        
-    def changed2(self,current):
-        if not current:
+    def changed4(self,current):
+        if self.tabs.currentIndex() == 1:
             try:
-                current = self.address.text()                      
+                self.next_button.clicked.connect(self.changed4)                  				
                 for lines in self.pathme2:
                     x2=lines.encode('utf-8')
                     y2=x2.decode('unicode-escape')
@@ -159,6 +243,90 @@ class Tabs(QWidget):
                     self.tab1.setRootIndex(self.tab1.model.index(self.baseline2))
                     self.tab1.model.setRootPath(self.baseline2)
                     self.tab1.setRootIndex(self.tab1.model.index(self.baseline2))
+                    self.status.showMessage(self.baseline2)
+                    self.basic=os.path.dirname(self.baseline2)
+                    self.address.setText(self.baseline2)            
+            except Exception as e:
+                print (e)
+
+##########################
+#Index 2 back & Forward
+###########################
+#Going back button function        
+    def changed5(self,current):
+        if self.tabs.currentIndex() == 2:                                             			
+            try:  
+                self.prev_button.clicked.connect(self.changed5)                			                    
+                for lines in self.pathme:
+                    x=lines.encode('utf-8')
+                    y=x.decode('unicode-escape')
+                    self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+                    print ("Going back to me: " +  self.baseline)    
+                    self.tab2.model.setRootPath(self.baseline)
+                    self.tab2.setRootIndex(self.tab2.model.index(self.baseline))
+                    self.tab2.model.setRootPath(self.baseline)
+                    self.tab2.setRootIndex(self.tab2.model.index(self.baseline))
+                    self.status.showMessage(self.baseline)
+                    self.basic=os.path.basename(self.baseline)
+                    self.address.setText(self.baseline)
+            except Exception as e:
+                print (e) 
+#Going forward button function        
+    def changed6(self,current):
+        if self.tabs.currentIndex() == 2:
+            try:
+                self.next_button.clicked.connect(self.changed6)                  				
+                for lines in self.pathme2:
+                    x2=lines.encode('utf-8')
+                    y2=x2.decode('unicode-escape')
+                    self.baseline2=y2
+                    print ("Forward to me: " +  self.baseline2)            
+                    self.tab2.model.setRootPath(self.baseline2)
+                    self.tab2.setRootIndex(self.tab2.model.index(self.baseline2))
+                    self.tab2.model.setRootPath(self.baseline2)
+                    self.tab2.setRootIndex(self.tab2.model.index(self.baseline2))
+                    self.status.showMessage(self.baseline2)
+                    self.basic=os.path.dirname(self.baseline2)
+                    self.address.setText(self.baseline2)            
+            except Exception as e:
+                print (e)
+
+##########################
+#Index 3 back & Forward
+###########################
+#Going back button function        
+    def changed7(self,current):
+        if self.tabs.currentIndex() == 3:                                             			
+            try:  
+                self.prev_button.clicked.connect(self.changed7)                			                    
+                for lines in self.pathme:
+                    x=lines.encode('utf-8')
+                    y=x.decode('unicode-escape')
+                    self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+                    print ("Going back to me: " +  self.baseline)    
+                    self.tab3.model.setRootPath(self.baseline)
+                    self.tab3.setRootIndex(self.tab3.model.index(self.baseline))
+                    self.tab3.model.setRootPath(self.baseline)
+                    self.tab3.setRootIndex(self.tab3.model.index(self.baseline))
+                    self.status.showMessage(self.baseline)
+                    self.basic=os.path.basename(self.baseline)
+                    self.address.setText(self.baseline)
+            except Exception as e:
+                print (e) 
+#Going forward button function        
+    def changed8(self,current):
+        if self.tabs.currentIndex() == 3:
+            try:
+                self.next_button.clicked.connect(self.changed8)                  				
+                for lines in self.pathme2:
+                    x2=lines.encode('utf-8')
+                    y2=x2.decode('unicode-escape')
+                    self.baseline2=y2
+                    print ("Forward to me: " +  self.baseline2)            
+                    self.tab3.model.setRootPath(self.baseline2)
+                    self.tab3.setRootIndex(self.tab3.model.index(self.baseline2))
+                    self.tab3.model.setRootPath(self.baseline2)
+                    self.tab3.setRootIndex(self.tab3.model.index(self.baseline2))
                     self.status.showMessage(self.baseline2)
                     self.basic=os.path.dirname(self.baseline2)
                     self.address.setText(self.baseline2)            
@@ -184,7 +352,8 @@ class Tabs(QWidget):
         self.sep1 = self.menu.addSeparator()
 
         self.action1 = self.menu.addAction('Select for copying or moving')
-        self.action1.triggered.connect(self.actionlist)
+        self.action1.triggered.connect(self.actionlist0)
+
                         
         self.paste = self.menu.addAction('Copy to...')
         self.paste.triggered.connect(self.pasteto)
@@ -218,105 +387,251 @@ class Tabs(QWidget):
 
 
 #About messagebox
-
     def about(self):
-        buttonReply = QMessageBox.question(self, 'Spin FM v.2.0 beta Copyright(c)2021 JJ Posti <techtimejourney.net>', "Spin FM is a spinoff of Sequence FM filemanager.The program comes with ABSOLUTELY NO WARRANTY  for details see: http://www.gnu.org/copyleft/gpl.html. This is free software, and you are welcome to redistribute it under GPL Version 2, June 1991.", QMessageBox.Ok )
+        buttonReply = QMessageBox.question(self, 'Spin FM v.2.0 RC1 Copyright(c)2021 JJ Posti <techtimejourney.net>', "Spin FM is a spinoff of Sequence FM filemanager.The program comes with ABSOLUTELY NO WARRANTY  for details see: http://www.gnu.org/copyleft/gpl.html. This is free software, and you are welcome to redistribute it under GPL Version 2, June 1991. \n\nUsing Tabs: Create Tab 1 from Tab 0. Tab 0 cannot be removed.\n\nTabs can be created by double-clicking an existing selected Tab.\n\nRemove Tabs by clicking Close tabs button while being on the latest created Tab. This button will remove the latest Tab first and then remove the next in line - if clicked again.", QMessageBox.Ok )
         if buttonReply == QMessageBox.Ok:
             print('Ok clicked, messagebox closed.')        
 
 #####################
 #QListView on Tabs
 ##################### 
-
+       	                           
 #Remove tabs unless only 1 available.
     def close_tab(self, number_of_tabs):   
-        if self.tabs.count() < 2:  
+        if self.tabs.currentIndex() == 0:
+            self.status.showMessage("Cannot remove Tab 0.")			  
             return
+        if self.tabs.currentIndex() == 1 and self.tabs.count() == 2:
+            self.tabs.removeTab(int(self.tabs.currentIndex()))			  
+            return
+        if self.tabs.currentIndex() == 2 and self.tabs.count() == 3:
+            self.tabs.removeTab(int(self.tabs.currentIndex()))			  
+            return
+        if self.tabs.currentIndex() == 3 and self.tabs.count() == 4:
+            self.tabs.removeTab(int(self.tabs.currentIndex()))			  
+            return                    	                                                                                                                                                      		    
         else:      
-            self.tabs.removeTab(number_of_tabs)
-
-#Add new tabs
-    def new_tabs(self,  label ="Blank"):
-        self.tab1 = QListView()      
-        self.tab1.model = QFileSystemModel()
-        self.tab1.model.setFilter(QDir.AllDirs | QDir.Files | QDir.NoDotAndDotDot)
-        self.name=getpass.getuser()
-        self.home="/home/"
-        self.path=self.home + self.name
-        self.tab1.model.setRootPath(self.path)
-        self.tab1.setModel(self.tab1.model)
-        self.tab1.setRootIndex(self.tab1.model.index(self.path))
-        self.tab1.clicked.connect(self.on_treeview2_clicked)
-        self.tab1.doubleClicked.connect(self.doubles)
-        self.tab1.setSelectionMode(QAbstractItemView.ExtendedSelection)
-#Into icon mode and standard aligment
-        self.tab1.setFlow(QListView.LeftToRight)
-        self.tab1.setResizeMode(QListView.Adjust)
-        self.tab1.setViewMode(QListView.IconMode)
-        self.tab1.setGridSize(QtCore.QSize(84, 84))		  
-        ix = self.tabs.addTab(self.tab1, "Tab")
-        self.tabs.setCurrentIndex(ix)
-        currentIndex=self.tabs.currentIndex()
-        currentWidget=self.tabs.currentWidget()
-        print(currentIndex)
-        self.tabs.setTabText(currentIndex, str(currentIndex))
-         
-    def tab_open_doubleclick(self, i):        
-        if i == -1: 
-            self.new_tabs()  
-
+            print ("Tabs available: "+str(self.tabs.count()))
+                     
+    def tab_open_doubleclick(self):        
+        if self.tabs.count() <= 3:
+            print(self.tabs.count())						 
+            new_tabs(self)              
+        else:
+            print("Tab number at max")
+            self.status.showMessage("Tab number at max.")
 ################################
-#Navigation
+#Navigation tabs 0-3
 ################################
     def navigate(self):
-        try:
-            self.path=self.address.text()
-            if os.path.isdir(self.path):           
-                self.tab1.model.setRootPath(self.path)
-                self.tab1.setRootIndex(self.tab1.model.index(self.path))
-                self.tab1.model.setRootPath(self.path)
-                self.tab1.setRootIndex(self.tab1.model.index(self.path))
-                self.status.showMessage(self.path)
-                self.basic=os.path.basename(self.path)
-            else:    	
-                self.status.showMessage("Not a folder path.")
-            return self.path
-        except Exception as e:
-            print (e)	
-
+        if self.tabs.currentIndex() == 0:
+            print("Current index is 0.")
+            try:
+                self.path=self.address.text()
+                if os.path.isdir(self.path):           
+                    self.tab0.model.setRootPath(self.path)
+                    self.tab0.setRootIndex(self.tab0.model.index(self.path))
+                    self.tab0.model.setRootPath(self.path)
+                    self.tab0.setRootIndex(self.tab0.model.index(self.path))
+                    self.status.showMessage(self.path)
+                    self.basic=os.path.basename(self.path)
+            except Exception as e:
+                print (e)	                     
+        if self.tabs.currentIndex() == 1:
+            print("Current index is 1.")					
+            try:
+                self.path=self.address.text()
+                if os.path.isdir(self.path):           
+                    self.tab1.model.setRootPath(self.path)
+                    self.tab1.setRootIndex(self.tab1.model.index(self.path))
+                    self.tab1.model.setRootPath(self.path)
+                    self.tab1.setRootIndex(self.tab1.model.index(self.path))
+                    self.status.showMessage(self.path)
+                    self.basic=os.path.basename(self.path)
+            except Exception as e:
+                print (e)	                       
+        if self.tabs.currentIndex() == 2:
+            print("Current index is 2.")					
+            try:
+                self.path=self.address.text()
+                if os.path.isdir(self.path):           
+                    self.tab2.model.setRootPath(self.path)
+                    self.tab2.setRootIndex(self.tab2.model.index(self.path))
+                    self.tab2.model.setRootPath(self.path)
+                    self.tab2.setRootIndex(self.tab2.model.index(self.path))
+                    self.status.showMessage(self.path)
+                    self.basic=os.path.basename(self.path)
+            except Exception as e:
+                print (e)	                      
+        if self.tabs.currentIndex() == 3:
+            print("Current index is 3.")					
+            try:
+                self.path=self.address.text()
+                if os.path.isdir(self.path):           
+                    self.tab3.model.setRootPath(self.path)
+                    self.tab3.setRootIndex(self.tab3.model.index(self.path))
+                    self.tab3.model.setRootPath(self.path)
+                    self.tab3.setRootIndex(self.tab3.model.index(self.path))
+                    self.status.showMessage(self.path)
+                    self.basic=os.path.basename(self.path)                                                         
+                else:    	
+                    self.status.showMessage("Not a folder path.")
+                return self.path
+            except Exception as e:
+                print (e)	
+                        
+##########################
+#Supporting for tabs 0-3
+##########################
 #Open location double-click comes & Go back/Go forward
     def doubles(self, index):
-        indexItem = self.tab1.model.index(index.row(), 0, index.parent())
-        filepath = self.tab1.model.filePath(indexItem)
-        print(filepath)
-        self.address.setText(filepath)
-        if os.path.isdir(filepath):
-            self.tab1.model.setRootPath(filepath)
-            self.tab1.setRootIndex(self.tab1.model.index(filepath))
-            self.basic=os.path.basename(self.path)
+#Tab0
+        if self.tabs.currentIndex() == 0:
+            indexItem = self.tab0.model.index(index.row(), 0, index.parent())
+            filepath = self.tab0.model.filePath(indexItem)
+            print(filepath)
+            self.address.setText(filepath)
+            if os.path.isdir(filepath):
+                self.tab0.model.setRootPath(filepath)
+                self.tab0.setRootIndex(self.tab0.model.index(filepath))
+                self.basic=os.path.basename(self.path)
 #Paths: Go back  
-        self.pathme.append(filepath)
-        try:
-            for lines in self.pathme:
-                x=lines.encode('utf-8')
-                y=x.decode('unicode-escape')
-                self.baseline=os.path.abspath(os.path.join(y, os.pardir))
-                print ("Back to me: " +  self.baseline)
-        except Exception as e:
-            print (e)	    
+            self.pathme.append(filepath)
+            try:
+                for lines in self.pathme:
+                    x=lines.encode('utf-8')
+                    y=x.decode('unicode-escape')
+                    self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+                    print ("Back to me: " +  self.baseline)
+            except Exception as e:
+                print (e)	    
 #Go Forward 
-        self.pathme2.append(filepath)
-        try:
-            for lines in self.pathme2:
-                x2=lines.encode('utf-8')
-                y2=x2.decode('unicode-escape')
-                self.baseline2=os.path.dirname(y2)
-                print ("Forward to me: " +  y2)            
-        except Exception as e:
-            print (e)	                   
+            self.pathme2.append(filepath)
+            try:
+                for lines in self.pathme2:
+                    x2=lines.encode('utf-8')
+                    y2=x2.decode('unicode-escape')
+                    self.baseline2=os.path.dirname(y2)
+                    print ("Forward to me: " +  y2)
+            except Exception as e:
+                print (e)	                   
+#Tab1
+        if self.tabs.currentIndex() == 1:
+            indexItem = self.tab1.model.index(index.row(), 0, index.parent())
+            filepath = self.tab1.model.filePath(indexItem)
+            print(filepath)
+            self.address.setText(filepath)
+            if os.path.isdir(filepath):
+                self.tab1.model.setRootPath(filepath)
+                self.tab1.setRootIndex(self.tab1.model.index(filepath))
+                self.basic=os.path.basename(self.path)
+#Paths: Go back  
+            self.pathme.append(filepath)
+            try:
+                for lines in self.pathme:
+                    x=lines.encode('utf-8')
+                    y=x.decode('unicode-escape')
+                    self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+                    print ("Back to me: " +  self.baseline)
+            except Exception as e:
+                print (e)	    
+#Go Forward 
+            self.pathme2.append(filepath)
+            try:
+                for lines in self.pathme2:
+                    x2=lines.encode('utf-8')
+                    y2=x2.decode('unicode-escape')
+                    self.baseline2=os.path.dirname(y2)
+                    print ("Forward to me: " +  y2)            
+            except Exception as e:
+                print (e)
 
-#Object Size data from selection
+#Tab2
+        if self.tabs.currentIndex() == 2:
+            indexItem = self.tab2.model.index(index.row(), 0, index.parent())
+            filepath = self.tab2.model.filePath(indexItem)
+            print(filepath)
+            self.address.setText(filepath)
+            if os.path.isdir(filepath):
+                self.tab2.model.setRootPath(filepath)
+                self.tab2.setRootIndex(self.tab2.model.index(filepath))
+                self.basic=os.path.basename(self.path)
+#Paths: Go back  
+            self.pathme.append(filepath)
+            try:
+                for lines in self.pathme:
+                    x=lines.encode('utf-8')
+                    y=x.decode('unicode-escape')
+                    self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+                    print ("Back to me: " +  self.baseline)
+            except Exception as e:
+                print (e)	    
+#Go Forward 
+            self.pathme2.append(filepath)
+            try:
+                for lines in self.pathme2:
+                    x2=lines.encode('utf-8')
+                    y2=x2.decode('unicode-escape')
+                    self.baseline2=os.path.dirname(y2)
+                    print ("Forward to me: " +  y2)            
+            except Exception as e:
+                print (e)
+#Tab3
+        if self.tabs.currentIndex() == 3:
+            indexItem = self.tab3.model.index(index.row(), 0, index.parent())
+            filepath = self.tab3.model.filePath(indexItem)
+            print(filepath)
+            self.address.setText(filepath)
+            if os.path.isdir(filepath):
+                self.tab3.model.setRootPath(filepath)
+                self.tab3.setRootIndex(self.tab3.model.index(filepath))
+                self.basic=os.path.basename(self.path)
+#Paths: Go back  
+            self.pathme.append(filepath)
+            try:
+                for lines in self.pathme:
+                    x=lines.encode('utf-8')
+                    y=x.decode('unicode-escape')
+                    self.baseline=os.path.abspath(os.path.join(y, os.pardir))
+                    print ("Back to me: " +  self.baseline)
+            except Exception as e:
+                print (e)	    
+#Go Forward 
+            self.pathme2.append(filepath)
+            try:
+                for lines in self.pathme2:
+                    x2=lines.encode('utf-8')
+                    y2=x2.decode('unicode-escape')
+                    self.baseline2=os.path.dirname(y2)
+                    print ("Forward to me: " +  y2)            
+            except Exception as e:
+                print (e)
+
+#Object Size data from selection - supporting 0-3 tabs
+######################################################
+#Tab0
     def on_treeview2_clicked(self, index):
+        try:		
+            indexItem = self.tab0.model.index(index.row(), 0, index.parent())
+            global filepath
+            filepath = self.tab0.model.filePath(indexItem)
+            print(filepath)
+            self.address.setText(filepath)
+            #File info
+            self.info = os.stat(filepath) 
+            size_mb=(str(self.info.st_size / (1024 * 1024)))
+            size_kb=(str("%.2f" % round(self.info.st_size / (1024.0))))
+            modified=(os.path.getmtime(filepath))
+            local_time=(str(time.ctime(modified)))
+            filetype = magic.open(magic.MAGIC_MIME)
+            filetype.load()
+            x=str(filetype.file(filepath))
+            self.status.showMessage(str( filepath + "  Size on mb: " + size_mb + "  Size on kb:  " + size_kb + "  Last modifed:  " + local_time + " Filetype: " + x))
+            self.basic=os.path.basename(self.path)        
+        except Exception as e:
+            print (e)
+#Tab1            
+    def on_treeview2_clicked2(self, index):
         try:		
             indexItem = self.tab1.model.index(index.row(), 0, index.parent())
             global filepath
@@ -335,9 +650,50 @@ class Tabs(QWidget):
             self.status.showMessage(str( filepath + "  Size on mb: " + size_mb + "  Size on kb:  " + size_kb + "  Last modifed:  " + local_time + " Filetype: " + x))
             self.basic=os.path.basename(self.path)        
         except Exception as e:
+            print (e)    
+#Tab2
+    def on_treeview2_clicked3(self, index):
+        try:		
+            indexItem = self.tab2.model.index(index.row(), 0, index.parent())
+            global filepath
+            filepath = self.tab2.model.filePath(indexItem)
+            print(filepath)
+            self.address.setText(filepath)
+            #File info
+            self.info = os.stat(filepath) 
+            size_mb=(str(self.info.st_size / (1024 * 1024)))
+            size_kb=(str("%.2f" % round(self.info.st_size / (1024.0))))
+            modified=(os.path.getmtime(filepath))
+            local_time=(str(time.ctime(modified)))
+            filetype = magic.open(magic.MAGIC_MIME)
+            filetype.load()
+            x=str(filetype.file(filepath))
+            self.status.showMessage(str( filepath + "  Size on mb: " + size_mb + "  Size on kb:  " + size_kb + "  Last modifed:  " + local_time + " Filetype: " + x))
+            self.basic=os.path.basename(self.path)        
+        except Exception as e:
             print (e)
-            
-            
+#Tab3
+    def on_treeview2_clicked4(self, index):
+        try:		
+            indexItem = self.tab3.model.index(index.row(), 0, index.parent())
+            global filepath
+            filepath = self.tab3.model.filePath(indexItem)
+            print(filepath)
+            self.address.setText(filepath)
+            #File info
+            self.info = os.stat(filepath) 
+            size_mb=(str(self.info.st_size / (1024 * 1024)))
+            size_kb=(str("%.2f" % round(self.info.st_size / (1024.0))))
+            modified=(os.path.getmtime(filepath))
+            local_time=(str(time.ctime(modified)))
+            filetype = magic.open(magic.MAGIC_MIME)
+            filetype.load()
+            x=str(filetype.file(filepath))
+            self.status.showMessage(str( filepath + "  Size on mb: " + size_mb + "  Size on kb:  " + size_kb + "  Last modifed:  " + local_time + " Filetype: " + x))
+            self.basic=os.path.basename(self.path)        
+        except Exception as e:
+            print (e)                                        
+                        
 ###################
 #Object handling
 ###################
@@ -420,55 +776,167 @@ class Tabs(QWidget):
             makefolder=os.makedirs('trash') 
 
 ##############################
-#Copying/Deleting/Moving etc.
+#Copying/Deleting/Moving etc. 
 ##############################
-
 #Append to actionlist
-    def actionlist(self):
+    def actionlist0(self):
         if len(self.actions) != 0:
-            print ("Clearing old.")
             del self.actions[:]    		
         try:
-            text=(self.tab1.selectedIndexes())
-            print(text)
-            for lines in text:
-                text2 = lines.data(Qt.DisplayRole)
-                dir_path = os.path.dirname(os.path.realpath(filepath))
-                line='/' 
-                final=dir_path + line + text2
-                print(final)
-                self.actions.append(final)
-                self.status.showMessage(str( "Added for actions. Select your destination. "))
+            if self.tabs.currentIndex() == 0:			
+                print("Tab0 list.")			
+                text=(self.tab0.selectedIndexes())
+                print(text)
+                for lines in text:
+                    text2 = lines.data(Qt.DisplayRole)
+                    dir_path = os.path.dirname(os.path.realpath(filepath))
+                    line='/' 
+                    final=dir_path + line + text2
+                    print(final)
+                    self.actions.append(final)
+                    self.status.showMessage(str( "Added for actions. Select your destination. "))
+                
+            if self.tabs.currentIndex() == 1:
+                print("Tab1 list.")			
+                text=(self.tab1.selectedIndexes())
+                print(text)
+                for lines in text:
+                    text2 = lines.data(Qt.DisplayRole)
+                    dir_path = os.path.dirname(os.path.realpath(filepath))
+                    line='/' 
+                    final=dir_path + line + text2
+                    print(final)
+                    self.actions.append(final)
+                    self.status.showMessage(str( "Added for actions. Select your destination. "))
+                    
+            if self.tabs.currentIndex() == 2:
+                print("Tab2 list.")			
+                text=(self.tab2.selectedIndexes())
+                print(text)
+                for lines in text:
+                    text2 = lines.data(Qt.DisplayRole)
+                    dir_path = os.path.dirname(os.path.realpath(filepath))
+                    line='/' 
+                    final=dir_path + line + text2
+                    print(final)
+                    self.actions.append(final)
+                    self.status.showMessage(str( "Added for actions. Select your destination. "))
+                    
+            if self.tabs.currentIndex() == 3:
+                print("Tab3 list.")			
+                text=(self.tab3.selectedIndexes())
+                print(text)
+                for lines in text:
+                    text2 = lines.data(Qt.DisplayRole)
+                    dir_path = os.path.dirname(os.path.realpath(filepath))
+                    line='/' 
+                    final=dir_path + line + text2
+                    print(final)
+                    self.actions.append(final)
+                    self.status.showMessage(str( "Added for actions. Select your destination. "))			                    			                    			              			        
         except Exception as e:
             print (self.status.showMessage(" Operation failed."))
-
-
+               
 #Permanent delete 
     def permanent_delete_objects(self):
         self.maketrash()	        			
         buttonReply = QMessageBox.question(self, 'Permanently delete  objects?', ' \n Press No now if you are not sure. ')
         if buttonReply == QMessageBox.Yes:
             try:
-                list_string=(self.tab1.selectedIndexes())
-                for lines in list_string:
-                    text = lines.data(Qt.DisplayRole)
-                    dir_path = os.path.dirname(os.path.realpath(filepath))
-                    line='/' 
-                    final=dir_path + line + text
-                    subprocess.Popen(["rm" , "-r" , final])
-                    self.status.showMessage("Objects permanently deleted.")                                                                        			
+                if self.tabs.currentIndex() != 0:
+                    self.status.showMessage(str( "Permenant delete only available on Tab 0. "))
+                    print("Perment delete blocked. Only available on Tab0")
+                    				
+                if self.tabs.currentIndex() == 0:
+                    self.status.showMessage(str( "Permenant delete on Tab0. "))
+                    print("Perment delete on Tab0")	    
+                    list_string=(self.tab0.selectedIndexes())
+                    for lines in list_string:
+                        text = lines.data(Qt.DisplayRole)
+                        dir_path = os.path.dirname(os.path.realpath(filepath))
+                        line='/' 
+                        final=dir_path + line + text
+                        subprocess.Popen(["rm" , "-r" , final])
+                        self.status.showMessage("Objects permanently deleted.")                                                                        			
             except Exception as e:
                 print (e)
         if buttonReply == QMessageBox.No:
             pass
+            
+#Delete objects 
+    def delete_objects(self):
+        self.maketrash()			
+        buttonReply = QMessageBox.question(self, 'Move objects to trash?',  ' \nObject with same name will be overwritten, if existing in trash folder. Press No now if you are not sure. ')
+        if buttonReply == QMessageBox.Yes:
+            try:
+                if self.tabs.currentIndex() == 0:					
+                    list_string=(self.tab0.selectedIndexes())
+                    for lines in list_string:
+                        text = lines.data(Qt.DisplayRole)
+                        dir_path = os.path.dirname(os.path.realpath(filepath))
+                        line='/' 
+                        final=dir_path + line + text
+                        name=getpass.getuser()
+                        uhome="/home/"
+                        trash="/trash"
+                        combine1=uhome + name + trash
+                        subprocess.Popen(["mv" , final , combine1])
+                        self.status.showMessage("Objects trashed.")
 
+                if self.tabs.currentIndex() == 1:					
+                    list_string=(self.tab1.selectedIndexes())
+                    for lines in list_string:
+                        text = lines.data(Qt.DisplayRole)
+                        dir_path = os.path.dirname(os.path.realpath(filepath))
+                        line='/' 
+                        final=dir_path + line + text
+                        name=getpass.getuser()
+                        uhome="/home/"
+                        trash="/trash"
+                        combine1=uhome + name + trash
+                        subprocess.Popen(["mv" , final , combine1])
+                        self.status.showMessage("Objects trashed.")
+
+                if self.tabs.currentIndex() == 2:					
+                    list_string=(self.tab2.selectedIndexes())
+                    for lines in list_string:
+                        text = lines.data(Qt.DisplayRole)
+                        dir_path = os.path.dirname(os.path.realpath(filepath))
+                        line='/' 
+                        final=dir_path + line + text
+                        name=getpass.getuser()
+                        uhome="/home/"
+                        trash="/trash"
+                        combine1=uhome + name + trash
+                        subprocess.Popen(["mv" , final , combine1])
+                        self.status.showMessage("Objects trashed.")
+
+                if self.tabs.currentIndex() == 3:					
+                    list_string=(self.tab3.selectedIndexes())
+                    for lines in list_string:
+                        text = lines.data(Qt.DisplayRole)
+                        dir_path = os.path.dirname(os.path.realpath(filepath))
+                        line='/' 
+                        final=dir_path + line + text
+                        name=getpass.getuser()
+                        uhome="/home/"
+                        trash="/trash"
+                        combine1=uhome + name + trash
+                        subprocess.Popen(["mv" , final , combine1])
+                        self.status.showMessage("Objects trashed.")
+                        
+            except Exception as e:
+                print (e)
+        if buttonReply == QMessageBox.No:
+             pass  
+                        
     def pasteto(self):
         if not self.actions:
             print ("Nothing to do.")
         else:        		
             try:            			
                 self.listme=(self.actions)                
-                buttonReply = QMessageBox.question(None, 'Proceed?', "Object with same name will be overwritten. If unsure press Cancel now.", QMessageBox.Cancel | QMessageBox.Ok  )
+                buttonReply = QMessageBox.question(self, 'Proceed?', "Object with same name will be overwritten. If unsure press Cancel now.", QMessageBox.Cancel | QMessageBox.Ok  )
                 if buttonReply == QMessageBox.Ok:
                     print('Ok clicked, messagebox closed.')
                     for lines in self.listme:
@@ -481,8 +949,8 @@ class Tabs(QWidget):
                     print ("Do not proceed. --> Going back to the program.")
                     del self.actions[:]                            
             except Exception as e:
-                print ( self.status.showMessage("Copying failed."))   
-
+                print ( self.status.showMessage("Copying failed.")) 
+                  
 #Move an object 
     def move_final(self):
         if not self.actions:
@@ -490,7 +958,7 @@ class Tabs(QWidget):
         else:        		
             try:            			
                 self.listme=(self.actions)                
-                buttonReply = QMessageBox.question(None, 'Proceed?', "Object with same name will be overwritten. If unsure press Cancel now.", QMessageBox.Cancel | QMessageBox.Ok  )
+                buttonReply = QMessageBox.question(self, 'Proceed?', "Object with same name will be overwritten. If unsure press Cancel now.", QMessageBox.Cancel | QMessageBox.Ok  )
                 if buttonReply == QMessageBox.Ok:
                     print('Ok clicked, messagebox closed.')
                     for lines in self.listme:
@@ -505,28 +973,6 @@ class Tabs(QWidget):
             except Exception as e:
                 print ( self.status.showMessage("Moving failed."))       
 
-#Delete objects 
-    def delete_objects(self):
-        self.maketrash()			
-        buttonReply = QMessageBox.question(self, 'Move objects to trash?',  ' \nObject with same name will be overwritten, if existing in trash folder. Press No now if you are not sure. ')
-        if buttonReply == QMessageBox.Yes:
-            try:
-                list_string=(self.tab1.selectedIndexes())
-                for lines in list_string:
-                    text = lines.data(Qt.DisplayRole)
-                    dir_path = os.path.dirname(os.path.realpath(filepath))
-                    line='/' 
-                    final=dir_path + line + text
-                    name=getpass.getuser()
-                    uhome="/home/"
-                    trash="/trash"
-                    combine1=uhome + name + trash
-                    subprocess.Popen(["mv" , final , combine1])
-                    self.status.showMessage("Objects trashed.")
-            except Exception as e:
-                print (e)
-        if buttonReply == QMessageBox.No:
-             pass  
 
 #Keypress events
     def keyPressEvent(self, event):
