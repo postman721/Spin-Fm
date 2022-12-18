@@ -13,6 +13,8 @@ sudo apt install pyside2-*
 
 - More tabs added.
 
+- Green theme added.
+
 
 <br>
 <br>
