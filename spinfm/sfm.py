@@ -369,9 +369,6 @@ class Tabs(QWidget):
         self.for1 = self.menu.addAction('Delete objects')
         self.for1.triggered.connect(self.delete_objects)
                 
-        self.for2 = self.menu.addAction('Permanently delete objects')
-        self.for2.triggered.connect(self.permanent_delete_objects)
-
         self.sepx = self.menu.addSeparator()
         
         self.openwiths = self.menu.addAction('Open with...')
@@ -836,33 +833,7 @@ class Tabs(QWidget):
                     self.status.showMessage(str( "Added for actions. Select your destination. "))			                    			                    			              			        
         except Exception as e:
             print (self.status.showMessage(" Operation failed."))
-               
-#Permanent delete 
-    def permanent_delete_objects(self):
-        self.maketrash()	        			
-        buttonReply = QMessageBox.question(self, 'Permanently delete  objects?', ' \n Press No now if you are not sure. ')
-        if buttonReply == QMessageBox.Yes:
-            try:
-                if self.tabs.currentIndex() != 0:
-                    self.status.showMessage(str( "Permenant delete only available on Tab 0. "))
-                    print("Perment delete blocked. Only available on Tab0")
-                    				
-                if self.tabs.currentIndex() == 0:
-                    self.status.showMessage(str( "Permenant delete on Tab0. "))
-                    print("Perment delete on Tab0")	    
-                    list_string=(self.tab0.selectedIndexes())
-                    for lines in list_string:
-                        text = lines.data(Qt.DisplayRole)
-                        dir_path = os.path.dirname(os.path.realpath(filepath))
-                        line='/' 
-                        final=dir_path + line + text
-                        subprocess.Popen(["rm" , "-r" , final])
-                        self.status.showMessage("Objects permanently deleted.")                                                                        			
-            except Exception as e:
-                print (e)
-        if buttonReply == QMessageBox.No:
-            pass
-            
+
 #Delete objects 
     def delete_objects(self):
         self.maketrash()			
