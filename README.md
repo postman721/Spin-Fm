@@ -9,7 +9,10 @@ sudo apt install pyside2-*
 
 - Close tabs button added: This will always close the latest opened tab.
 
-- Copy, paste, move to functionalities improved.
+- Copy, paste, move to functionalities improved & fixed.
+
+- More tabs added.
+
 
 <br>
 <br>
