@@ -21,7 +21,7 @@ sudo apt install pyside2-*
 
 - Back and forward store only the most recent locations.
 
-<b> Do not paint <b/> your selections for copying, moving or deleting: This will likely cause non-functionality. Press CTRL and point and click through the files. After selected, right-click and choose proper menu action. For copying and moving: Select for copying or moving. For deletion: Delete objects.
+<b> Do not paint <b/> your selections for copying, moving or deleting: This will likely cause non-functionality. Press CTRL and point and click through the objects. After selected, right-click and choose proper menu action. For copying and moving: Select for copying or moving. For deletion: Delete objects.
    
  After copying or moving selection navigate to your target location and choose Copy to.. or Move to... from the right-click menu. 
  
