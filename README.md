@@ -1,4 +1,16 @@
 
+
+RC2 May 2023:
+
+This release contains many minor and major code fixes.
+
+- Coding syntax is cleared.
+- Addressbar issues with differentiating files and folders are fixed.
+- Error handling is increased.
+- Theme issues fixed.
+- Delete function issues fixed by introducing an actionlist functionality.
+____________________
+
 Spin FM filemanager v 2.0 RC1 Copyright JJ Posti <techtimejourney.net> 2021
 
 2.0 RC1 new features - Sunday 18th of December 2022
