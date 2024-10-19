@@ -4,6 +4,8 @@ This is RC3 October 2024.
 
 A lightweight file manager built using PyQt5, designed fot file management tasks. This file manager provides a tabbed interface for browsing the file system, creating, deleting, copying, and pasting files or folders. It also supports context menus for file operations and provides a dedicated tab for accessing the system trash.
 
+![full](https://github.com/user-attachments/assets/564b30c4-5469-4bc3-b9af-d5d42d7997cf)
+
 ## Features
 1. Tabbed Interface
 
@@ -58,6 +60,8 @@ A lightweight file manager built using PyQt5, designed fot file management tasks
     Trash is accessible via the "Trash" button on the toolbar or by creating a new tab with the trash path.
 
 9. Usb Mounting
+
+![mounted](https://github.com/user-attachments/assets/1576818c-3f5b-46b9-9a16-f5492e88d3f8)
 
     Mount the usb device within the file manager. Double-click its name to the device and its content.
 
