@@ -99,4 +99,6 @@ A lightweight file manager built using PyQt5, designed fot file management tasks
 
 ## Making it a binary for Linux
 
+I already did this at: https://github.com/postman721/Spin-Fm/tree/main/binary folder. But if you need to do it again for your system:
+
     pyinstaller --onefile --add-data "themes/default.css:styles" main.py
