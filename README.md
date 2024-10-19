@@ -1,6 +1,10 @@
 # SpinFm File Manager
 
+Spin FM v. 2.0 Copyright (c) 2021 JJ Posti <techtimejourney.net> This program comes with ABSOLUTELY NO WARRANTY; for details see: http://www.gnu.org/copyleft/gpl.html.  This is free software, and you are welcome to redistribute it under GPL Version 2, June 1991")
+
 This is RC3 October 2024. 
+
+
 
 A lightweight file manager built using PyQt5, designed fot file management tasks. This file manager provides a tabbed interface for browsing the file system, creating, deleting, copying, and pasting files or folders. It also supports context menus for file operations and provides a dedicated tab for accessing the system trash.
 
