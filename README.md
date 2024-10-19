@@ -61,7 +61,7 @@ A lightweight file manager built using PyQt5, designed fot file management tasks
 
 9. Usb Mounting
 
-![mounted](https://github.com/user-attachments/assets/1576818c-3f5b-46b9-9a16-f5492e88d3f8)
+![mounted](https://github.com/user-attachments/assets/4c87c0e1-c828-44ec-a8f8-75f562fd9c86)
 
     Mount the usb device within the file manager. Double-click its name to the device and its content.
 
