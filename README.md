@@ -82,8 +82,9 @@ A lightweight file manager built using PyQt5, designed fot file management tasks
         Right-click on any tab (except the first) to close it.
 
     Navigating the File System:
-        Use the home and trash buttons on the toolbar to navigate to the home directory and the trash directory, respectively.
-        Enter paths directly in the address bar and press Enter to navigate to that location.
+        Use the home and trash buttons on the toolbar to navigate to the home directory 
+        and to the trash directory, respectively.
+        Enter paths directly in the address bar and press Enter to navigate to locations.
 
     Performing File Operations:
         Right-click on files or folders to access delete, cut, copy, and paste options.
