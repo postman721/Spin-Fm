@@ -4,6 +4,10 @@ Spin FM v. 2.0 Copyright (c) 2021 JJ Posti <techtimejourney.net> This program co
 
 This is RC3 October 2024. 
 
+#### How to fix: User cannot create/copy/paste anything to usb devices. 
+Make sure user actually owns its media content: sudo chown -hR $USER:$USER /media/$USER
+
+
 ![full](https://github.com/user-attachments/assets/e815ef34-c6f5-446d-9308-ad2beafb4959)
 
 A lightweight file manager built using PyQt5, designed fot file management tasks. This file manager provides a tabbed interface for browsing the file system, creating, deleting, copying, and pasting files or folders. It also supports context menus for file operations and provides a dedicated tab for accessing the system trash.
