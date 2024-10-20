@@ -5,7 +5,7 @@ Spin FM v. 2.0 Copyright (c) 2021 JJ Posti <techtimejourney.net> This program co
 This is RC3 October 2024. 
 
 #### How to fix: User cannot create/copy/paste anything to usb devices. 
-Make sure user actually owns its media content: sudo chown -hR $USER:$USER /media/$USER
+Make sure the user actually owns its media content: sudo chown -hR $USER:$USER /media/$USER
 
 
 ![full](https://github.com/user-attachments/assets/e815ef34-c6f5-446d-9308-ad2beafb4959)
