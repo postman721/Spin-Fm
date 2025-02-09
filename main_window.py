@@ -3,7 +3,6 @@
 # Disable the creation of __pycache__ directories
 sys.dont_write_bytecode = True
 import sys
-sys.dont_write_bytecode = True
 import subprocess
 import json
 import os
