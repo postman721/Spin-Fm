@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # empty_trash.py
+import sys
 # Disable the creation of __pycache__ directories
 sys.dont_write_bytecode = True
 import os

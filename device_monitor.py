@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # device_monitor.py
+import sys
 # Disable the creation of __pycache__ directories
 sys.dont_write_bytecode = True
 from PyQt5.QtCore import QObject, pyqtSignal
