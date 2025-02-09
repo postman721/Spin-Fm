@@ -2,8 +2,8 @@
 
 Spin FM RC4 is a lightweight file manager built with PyQt5 that offers USB device monitoring, a tabbed file browser with back/forward navigation, multiple file/folder selection, and clipboard operations (cut/copy/paste). The application is designed with modularity in mind and is split into multiple Python modules for ease of maintenance and extension.
 
-> **License:** This project is distributed under the GNU GPL v2 (June 1991). See the LICENSE file for details.
-
+> **License:** This project is distributed under the GNU GPL v2 (June 1991).
+![Image](https://github.com/user-attachments/assets/4b1c67bc-d949-443d-b1dc-7adabf85faf2)
 ## Features
 
 - **USB Device Monitoring:**  
@@ -23,6 +23,8 @@ Spin FM RC4 is a lightweight file manager built with PyQt5 that offers USB devic
 
 - **Trash Management:**  
   Easily empty your trash directory via the File menu.
+
+![Image](https://github.com/user-attachments/assets/2830285d-8c6e-4139-ab98-599d02cd7be5)
 
 ## Project Structure
 
