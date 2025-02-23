@@ -53,4 +53,4 @@ The project is organized into multiple modules for clarity.
 
 ## Debian dependency list
 
-    python3 python3-pyqt5 qttools5-dev-tools xdg-utils libqt5widgets5 libqt5gui5 libqt5core python3-pyudev udisks2
+    python3 python3-pyqt5 qttools5-dev-tools xdg-utils libqt5widgets5 libqt5gui5 libqt5core5a python3-pyudev udisks2
