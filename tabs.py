@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (
     QStatusBar, QMessageBox, QMenu, QAction, QInputDialog, QListView,
     QFileSystemModel, QTabBar, QStyle
 )
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QDir
 
 class CustomTabBar(QTabBar):
     tabDoubleClicked = pyqtSignal(int)
@@ -103,6 +103,9 @@ class Tabs(QWidget):
         self.setLayout(self.layout)
         self.updateNavigationButtons()
 
+        # Flag to control hidden file visibility
+        self.show_hidden_files = False
+
     def addInitialTab(self, path=None):
         if path is None:
             path = os.path.expanduser("~")
@@ -161,6 +164,22 @@ class Tabs(QWidget):
         self.current_paths[list_view] = path
         self.history[list_view] = {"paths": [path], "current": 0}
         return list_view
+
+    def update_hidden_files(self, show: bool) -> None:
+        """
+        Toggles the visibility of hidden files in all tabs.
+        
+        :param show: Boolean to show or hide hidden files.
+        """
+        self.show_hidden_files = show
+        for index in range(self.tabs_widget.count()):
+            tab = self.tabs_widget.widget(index)
+            if isinstance(tab, QListView):  # Ensure it's a file view
+                model = tab.model()
+                if show:
+                    model.setFilter(model.filter() | QDir.Hidden)  # Show hidden files
+                else:
+                    model.setFilter(model.filter() & ~QDir.Hidden)  # Hide hidden files
 
     def openFileContextMenu(self, position, file_view):
         context_menu = QMenu(self)

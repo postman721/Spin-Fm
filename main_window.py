@@ -44,6 +44,9 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Spin FM")
         logger.info("MainWindow initialized.")
 
+        # Initialize hidden files state here
+        self.show_hidden_files = False  # Initialize it as False
+        
         # Set up persistent settings.
         self.settings = QSettings("MyOrganization", "Spin FM")
 
@@ -93,13 +96,20 @@ class MainWindow(QMainWindow):
 
     def setup_menus(self) -> None:
         """
-        Sets up the File and Themes menus in the menu bar.
+        Sets up the File, View, and Themes menus in the menu bar.
         """
         # File menu.
         file_menu = self.menuBar().addMenu("File")
         empty_trash_action = QAction("Empty Trash", self)
         empty_trash_action.triggered.connect(self.empty_trash)
         file_menu.addAction(empty_trash_action)
+
+        # View menu.
+        view_menu = self.menuBar().addMenu("View")
+        show_hidden_files_action = QAction("Show Hidden Files", self, checkable=True)
+        show_hidden_files_action.setChecked(self.show_hidden_files)
+        show_hidden_files_action.triggered.connect(self.toggle_hidden_files)
+        view_menu.addAction(show_hidden_files_action)
 
         # Themes menu.
         themes_menu = self.menuBar().addMenu("Themes")
@@ -129,6 +139,16 @@ class MainWindow(QMainWindow):
         self.theme_manager.load_and_apply_theme(theme_name)
         self.settings.setValue("theme", theme_name)
         logger.info(f"Theme changed to: {theme_name} and saved to settings.")
+
+    def toggle_hidden_files(self, checked: bool) -> None:
+        """
+        Toggles whether hidden files should be shown or not.
+        
+        :param checked: The new state of the checkbox.
+        """
+        self.show_hidden_files = checked
+        logger.info(f"Show Hidden Files set to: {self.show_hidden_files}")
+        self.tabs.update_hidden_files(self.show_hidden_files)
 
     def confirm_action(self, title: str, message: str) -> bool:
         """
