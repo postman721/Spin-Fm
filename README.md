@@ -54,3 +54,17 @@ The project is organized into multiple modules for clarity.
 ## Debian dependency list
 
     python3 python3-pyqt5 qttools5-dev-tools xdg-utils libqt5widgets5 libqt5gui5 libqt5core5a python3-pyudev udisks2
+
+
+## Usb permissions for all users, make a script file.
+
+With the following content.
+
+    echo "Creating udev rule to grant USB devices 0666 permissions for all users..."
+    if [ ! -f /etc/udev/rules.d/99-usb.rules ]; then
+        echo 'SUBSYSTEM=="usb", MODE="0666"' > /etc/udev/rules.d/99-usb.rules
+        echo "Created udev rule at /etc/udev/rules.d/99-usb.rules."
+        udevadm control --reload-rules && udevadm trigger
+    else
+        echo "Udev rule for USB devices already exists."
+    fi
