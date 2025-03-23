@@ -3,8 +3,14 @@
 Spin FM RC4 is a lightweight file manager built with PyQt5 that offers USB device monitoring, a tabbed file browser with back/forward navigation, multiple file/folder selection, and clipboard operations (cut/copy/paste). The application is designed with modularity in mind and is split into multiple Python modules for ease of maintenance and extension.
 
 > **License:** This project is distributed under the GNU GPL v2 (June 1991).
-![Image](https://github.com/user-attachments/assets/4b1c67bc-d949-443d-b1dc-7adabf85faf2)
+![Image](https://github.com/user-attachments/assets/ac66c7b9-c4aa-4351-9928-6f4d6481c7af)
+
+In the picture you see icon theme change and some dragged and dropped songs between Spin FM and Albix music player.
+
 ## Features
+
+- **Icon theme changing:**  
+  Change icon theme. Added as a new feature on March 23th, 2025.
 
 - **USB Device Monitoring:**  
   Automatically detects USB devices using `pyudev` and displays them in a dedicated left panel. Click or right-click to mount/unmount devices.
