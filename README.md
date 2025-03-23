@@ -41,6 +41,7 @@ The project is organized into multiple modules for clarity.
     Launching the File Manager:
         Run the main script to start the file manager (python3 main.py).
         The interface will launch with one tab open to the user's home directory.
+        If issues arise, remember to check that every file is executable.
 
     Managing Tabs:
         Use the "Add Tab" button or double-click on the tab bar to create new tabs.
