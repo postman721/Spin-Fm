@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os
+import os, sys
 from pathlib import Path
 from PyQt5.QtGui import QIcon
 
