@@ -3,6 +3,9 @@ import os
 from pathlib import Path
 from PyQt5.QtGui import QIcon
 
+# Disable the creation of __pycache__ directories
+sys.dont_write_bytecode = True
+
 class IconThemeManager:
     """
     Manages icon themes by scanning typical Linux icon directories and
