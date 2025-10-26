@@ -3,7 +3,7 @@
 import sys
 # Disable the creation of __pycache__ directories
 sys.dont_write_bytecode = True
-from PyQt5.QtCore import QObject, pyqtSignal
+from qt_compat import QObject, pyqtSignal
 import pyudev
 
 class DeviceMonitor(QObject):

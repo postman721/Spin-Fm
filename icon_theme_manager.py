@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os, sys
 from pathlib import Path
-from PyQt5.QtGui import QIcon
+from qt_compat import QIcon
 
 # Disable the creation of __pycache__ directories
 sys.dont_write_bytecode = True

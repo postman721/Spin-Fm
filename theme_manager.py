@@ -4,7 +4,7 @@ import sys
 # Disable the creation of __pycache__ directories
 sys.dont_write_bytecode = True
 import os
-from PyQt5.QtWidgets import QApplication
+from qt_compat import QApplication
 
 class ThemeManager:
     def __init__(self, theme_dir):

@@ -7,13 +7,14 @@ import os
 import subprocess
 from functools import partial
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QMenu, QMessageBox
-from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import pyqtSignal
+from qt_compat import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QMenu, QMessageBox
+from qt_compat import Qt, QPoint
+from qt_compat import QIcon
+from qt_compat import pyqtSignal
 
 from disk_space import DiskSpaceInfo
 from device_monitor import DeviceMonitor
+
 
 class MountedDevicesWidget(QWidget):
     # Signal to emit the mount point of a device to open.
@@ -33,6 +34,7 @@ class MountedDevicesWidget(QWidget):
         layout = QVBoxLayout()
         label = QLabel("USB Devices")
         layout.addWidget(label)
+
         self.table_widget = QTableWidget()
         self.table_widget.setColumnCount(2)
         self.table_widget.setHorizontalHeaderLabels(["Name", "Action"])
@@ -44,6 +46,7 @@ class MountedDevicesWidget(QWidget):
         self.table_widget.customContextMenuRequested.connect(self.show_context_menu)
         self.table_widget.cellDoubleClicked.connect(self.on_double_click)
         layout.addWidget(self.table_widget)
+
         self.setLayout(layout)
 
     def update_devices(self):
@@ -60,19 +63,22 @@ class MountedDevicesWidget(QWidget):
         for device_node, mountpt in sorted(devices, key=lambda x: x[0]):
             row = self.table_widget.rowCount()
             self.table_widget.insertRow(row)
+
             dev_name = os.path.basename(device_node)
             name_item = QTableWidgetItem(dev_name)
             icon_path = "icons/mounted.png" if mountpt else "icons/unmounted.png"
             name_item.setIcon(QIcon(icon_path))
-            # Store (device_node, mountpt) in the item’s user data.
+            # Store (device_node, mountpt) in the item's user data.
             name_item.setData(Qt.UserRole, (device_node, mountpt))
             self.table_widget.setItem(row, 0, name_item)
+
             btn = QPushButton("Unmount" if mountpt else "Mount")
             if mountpt:
                 btn.clicked.connect(partial(self.unmount_device, device_node, mountpt))
             else:
                 btn.clicked.connect(partial(self.mount_device, device_node))
             self.table_widget.setCellWidget(row, 1, btn)
+
             print(f"[MountedDevicesWidget] Row added: {dev_name}, Action: {'Unmount' if mountpt else 'Mount'}")
 
     def on_double_click(self, row, col):
@@ -95,19 +101,27 @@ class MountedDevicesWidget(QWidget):
         index = self.table_widget.indexAt(pos)
         if not index.isValid():
             return
+
         row = index.row()
         item = self.table_widget.item(row, 0)
         if not item:
             return
+
         device_info = item.data(Qt.UserRole)
         if not device_info:
             return
+
         device_node, mountpt = device_info
+
         menu = QMenu(self)
+
         if mountpt:
             open_action = menu.addAction("Open")
             unmount_action = menu.addAction("Unmount")
-            action = menu.exec_(self.table_widget.viewport().mapToGlobal(pos))
+
+            gpos = self.table_widget.viewport().mapToGlobal(pos)
+            action = menu.exec(gpos) if hasattr(menu, "exec") else menu.exec_(gpos)
+
             if action == open_action:
                 if os.path.exists(mountpt):
                     self.open_device.emit(mountpt)
@@ -115,9 +129,13 @@ class MountedDevicesWidget(QWidget):
                     QMessageBox.warning(self, "Not Mounted", "This device is not mounted.")
             elif action == unmount_action:
                 self.unmount_device(device_node, mountpt)
+
         else:
             mount_action = menu.addAction("Mount")
-            action = menu.exec_(self.table_widget.viewport().mapToGlobal(pos))
+
+            gpos = self.table_widget.viewport().mapToGlobal(pos)
+            action = menu.exec(gpos) if hasattr(menu, "exec") else menu.exec_(gpos)
+
             if action == mount_action:
                 self.mount_device(device_node)
 
@@ -161,7 +179,8 @@ class MountedDevicesWidget(QWidget):
         reply = QMessageBox.question(
             self, "Confirm Unmount",
             f"Are you sure you want to unmount {device_node} from {mount_point}?",
-            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+        )
         if reply == QMessageBox.Yes:
             try:
                 r = subprocess.run(["udisksctl", "unmount", "-b", device_node],

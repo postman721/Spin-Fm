@@ -12,7 +12,7 @@ import logging
 from functools import partial
 from pathlib import Path
 
-from PyQt5.QtWidgets import (
+from qt_compat import (
     QApplication,
     QMainWindow,
     QSplitter,
@@ -20,8 +20,8 @@ from PyQt5.QtWidgets import (
     QStatusBar,
     QAction,
 )
-from PyQt5.QtCore import Qt, QTimer, QPoint, QSettings
-from PyQt5.QtGui import QIcon
+from qt_compat import Qt, QTimer, QPoint, QSettings
+from qt_compat import QIcon
 
 from theme_manager import ThemeManager
 from icon_theme_manager import IconThemeManager  # New icon theme manager.
