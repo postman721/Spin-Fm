@@ -1,17 +1,18 @@
 /*
-  Dark Theme
-  ----------
-  - Uses charcoal grays for a simple, neutral dark mode
-  - High contrast text
+  Dark Theme (arrow-boosted)
+  --------------------------
+  - Charcoal background, high-contrast text
+  - Larger toolbar icons, brighter hover/pressed states
+  - Visible arrows for toolbuttons, combos, spinboxes, and tab scrollers
 */
 
 /* GLOBAL */
 * {
     font-family: "Inter", "Noto Sans", "Roboto", Arial, sans-serif;
     font-size: 12pt;
-    color: #EAEAEA;              /* Light text on dark background */
-    background-color: #2C2C2C;   /* Dark gray background */
-    selection-background-color: #444444;  /* Medium gray highlight */
+    color: #EAEAEA;                 /* Light text */
+    background-color: #2C2C2C;      /* Dark bg */
+    selection-background-color: #444444;
     selection-color: #EAEAEA;
 }
 
@@ -34,23 +35,31 @@ QTabBar::tab {
     padding: 6px 12px;
     color: #EAEAEA;
 }
-
-QTabBar::tab:selected, QTabBar::tab:hover {
+QTabBar::tab:selected,
+QTabBar::tab:hover {
     background-color: #4C4C4C;
     border: 1px solid #5C5C5C;
 }
 
-/* Close button for tabs */
-QTabBar::close-button {
-    width: 3px;           /* Force a width for visibility */
-    height: 3px;          /* Force a height for visibility */
-    subcontrol-position: right;
-    subcontrol-origin: padding;
-    margin-right: 4px;
-
+/* Tab scroller buttons (left/right arrows) */
+QTabBar QToolButton {
+    /* Inherit toolbutton styling below so arrows are clear */
+    padding: 4px 6px;
 }
 
-
+/* Close button for tabs — make it *actually* visible */
+QTabBar::close-button {
+    width: 14px;
+    height: 14px;
+    subcontrol-position: right;
+    subcontrol-origin: padding;
+    margin-right: 6px;
+    border-radius: 7px;
+    background: #5C5C5C;
+}
+QTabBar::close-button:hover {
+    background: #FF5D5D; /* bright red on hover for visibility */
+}
 
 /* FILE & FOLDER LIST VIEW */
 QListView {
@@ -58,18 +67,15 @@ QListView {
     border: 1px solid #4C4C4C;
     padding: 8px;
 }
-
 QListView::item {
     padding: 10px;
     margin: 6px;
     border-radius: 6px;
 }
-
 QListView::item:selected {
     background-color: #444444;
     color: #EAEAEA;
 }
-
 QListView::item:hover {
     background-color: #4C4C4C;
 }
@@ -80,12 +86,10 @@ QMenu {
     border: 1px solid #4C4C4C;
     padding: 6px;
 }
-
 QMenu::item {
     padding: 8px 16px;
     border-radius: 4px;
 }
-
 QMenu::item:selected {
     background-color: #444444;
     color: #EAEAEA;
@@ -93,21 +97,58 @@ QMenu::item:selected {
 
 /* TOOLBAR */
 QToolBar {
-    background-color: #3C3C3C;
+    background-color: #2E2E2E;         /* slightly darker to frame buttons */
     border-bottom: 1px solid #4C4C4C;
     padding: 4px;
+    spacing: 6px;
 }
 
+/* Tool buttons — BIGGER icons + bright hover/pressed borders
+   (affects normal toolbar buttons and tab scroller toolbuttons) */
 QToolButton {
-    background-color: #3C3C3C;
-    border: 1px solid #4C4C4C;
-    border-radius: 4px;
-    padding: 4px 8px;
+    background-color: #333333;
+    border: 1px solid #5A5A5A;
+    border-radius: 6px;
+    padding: 6px 10px;
     margin-right: 2px;
+    color: #FAFAFA;
+    qproperty-iconSize: 22px 22px;     /* <— larger arrow/icon */
+}
+QToolButton:hover {
+    background-color: #3B3B3B;
+    border-color: #7AA2FF;             /* bright accent border for visibility */
+    color: #FFFFFF;
+}
+QToolButton:pressed {
+    background-color: #262626;
+    border-color: #A8C5FF;             /* even brighter when pressed */
+    color: #FFFFFF;
+}
+QToolButton:disabled {
+    color: #7A7A7A;
+    border-color: #3A3A3A;
 }
 
-QToolButton:hover {
-    background-color: #4C4C4C;
+/* Combo & Spin arrows — ensure they remain bright on dark */
+QComboBox::down-arrow,
+QAbstractSpinBox::up-button,
+QAbstractSpinBox::down-button {
+    /* base surfaces for arrow subcontrols */
+    background: transparent;
+    border: none;
+}
+QComboBox::down-arrow {
+    width: 12px; height: 12px;
+}
+QAbstractSpinBox::up-button,
+QAbstractSpinBox::down-button {
+    width: 16px;
+}
+QComboBox::down-arrow:hover,
+QAbstractSpinBox::up-button:hover,
+QAbstractSpinBox::down-button:hover {
+    background: #3B3B3B;
+    border-radius: 4px;
 }
 
 /* PUSH BUTTONS */
@@ -119,11 +160,10 @@ QPushButton {
     border-radius: 4px;
     font-weight: 500;
 }
-
 QPushButton:hover {
     background-color: #5C5C5C;
+    border-color: #6C6C6C;
 }
-
 QPushButton:pressed {
     background-color: #6C6C6C;
 }
@@ -139,7 +179,7 @@ QLineEdit {
 
 /* STATUS BAR */
 QStatusBar {
-    background-color: #3C3C3C;
+    background-color: #2E2E2E;
     color: #EAEAEA;
     padding: 6px;
     border-top: 1px solid #4C4C4C;
@@ -147,21 +187,18 @@ QStatusBar {
 
 /* SCROLLBARS */
 QScrollBar:vertical {
-    background-color: #3C3C3C;
+    background-color: #2F2F2F;
     width: 12px;
     border-radius: 6px;
 }
-
 QScrollBar::handle:vertical {
     background-color: #4C4C4C;
     min-height: 20px;
     border-radius: 6px;
 }
-
 QScrollBar::handle:vertical:hover {
     background-color: #5C5C5C;
 }
-
 QScrollBar::add-line:vertical,
 QScrollBar::sub-line:vertical {
     height: 0;
@@ -173,11 +210,9 @@ QMessageBox {
     background-color: #3C3C3C;
     border: 1px solid #4C4C4C;
 }
-
 QMessageBox QLabel {
     color: #EAEAEA;
 }
-
 QMessageBox QPushButton {
     background-color: #4C4C4C;
     border: 1px solid #5C5C5C;
@@ -185,7 +220,6 @@ QMessageBox QPushButton {
     padding: 6px 12px;
     border-radius: 4px;
 }
-
 QMessageBox QPushButton:hover {
     background-color: #5C5C5C;
 }
