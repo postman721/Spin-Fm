@@ -72,7 +72,7 @@
 python3 main.py
 ```
 - The file manager opens with your **Home** directory in the first tab.  
-- Press `Ctrl+T` to open new tabs or right-click existing tabs to close them.
+- To open new tabs: Right-click an existing tab. 
 
 **Navigating the File System:**
 - Use the toolbar buttons for **Back**, **Forward**, **Home**, and **Trash**.  
