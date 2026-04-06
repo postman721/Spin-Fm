@@ -108,7 +108,7 @@ Install all required packages for both PyQt5 and PyQt6 compatibility:
 
 ```bash
 sudo apt install \
-  python3  python3-pyqt6 python3-pyudev xdg-utils udisks2 \
+  python3 python3-pyqt6 python3-pyudev xdg-utils udisks2 \
   qttools5-dev-tools libqt5widgets5 libqt5gui5 libqt5core5a
 ```
 
