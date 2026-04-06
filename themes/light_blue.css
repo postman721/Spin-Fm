@@ -44,8 +44,8 @@ QTabBar::tab:hover {
 
 /* Close button for tabs */
 QTabBar::close-button {
-    width: 3px;           /* Force a width for visibility */
-    height: 3px;          /* Force a height for visibility */
+    width: 14px;          /* Keep the close button actually clickable */
+    height: 14px;         /* Keep the close button actually clickable */
     subcontrol-position: right;
     subcontrol-origin: padding;
     margin-right: 4px;
