@@ -3,7 +3,7 @@
 **Spin FM RC6 ** is a lightweight, modular file manager now fully compatible with **PyQt6** (while maintaining PyQt5 fallback support). It features a tabbed interface, USB device monitoring, custom theming, and modern UI enhancements like larger toolbar icons, visible close buttons on tabs, and improved hidden-file toggling.
 
 > **License:** This project is distributed under the **GNU GPL v2 (June 1991)**.  
-<img width="1194" height="832" alt="Image" src="https://github.com/user-attachments/assets/51f1a25f-e1c9-4e3b-a75d-7cefaf6a7cbe" />
+<img width="1200" height="508" alt="Image" src="https://github.com/user-attachments/assets/e8102e64-9d38-43c2-a082-9624a8299784" />
 
 ---
 ## New in RC6 (April 2026)
