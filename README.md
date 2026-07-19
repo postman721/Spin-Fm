@@ -7,6 +7,7 @@ Spin FM is a lightweight tabbed Qt file manager for Linux with removable-device 
 Default theme.
 </br>
 
+<b> Notice. Currently the empty trash functionality only empties local trash. For usb / removable device trash, you need to do the final deletion of the files manually. </b>
 
 <img width="800" height="600" alt="spin_music" src="https://github.com/user-attachments/assets/e17ba081-97fa-4964-b1b3-4dccfb005f74" />
 
