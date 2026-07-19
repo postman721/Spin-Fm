@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+
+# Autopkgtest must not write bytecode beside application-private source.
+export PYTHONDONTWRITEBYTECODE=1
+
+spin-fm --version
+PYTHONPATH=/usr/share/spin-fm/src python3 -B -c 'import spin_fm; assert spin_fm.__version__ == "2.6.14"'
+PYTHONPATH=/usr/share/spin-fm/src python3 -B -c 'from spin_fm.audio import is_supported_audio_file; assert is_supported_audio_file("track.mp3"); assert is_supported_audio_file("track.ogg")'
+python3 -B -c 'from PyQt6 import QtDBus, QtMultimedia'
+command -v gio >/dev/null
+test -r /usr/share/spin-fm/src/spin_fm/themes/dark.css
+test -r /usr/share/spin-fm/src/spin_fm/themes/lwm_dark.css
+test -r /usr/share/spin-fm/src/spin_fm/themes/lwm_graphite.css
+
+if find /usr/share/spin-fm \
+    \( -type d -name __pycache__ \
+       -o -type f -name '*.pyc' \
+       -o -type f -name '*.pyo' \
+       -o -type f -name '*$py.class' \) \
+    -print -quit | grep -q .; then
+    echo 'Spin FM installation contains Python bytecode cache artifacts' >&2
+    exit 1
+fi

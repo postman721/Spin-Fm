@@ -1,0 +1,51 @@
+#!/usr/bin/make -f
+
+export PYTHONPATH=$(CURDIR)/src
+export PYTHONDONTWRITEBYTECODE=1
+export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+export QT_QPA_PLATFORM=offscreen
+
+%:
+	dh $@
+
+# Spin FM is installed as application-private source, not as a Python package.
+override_dh_auto_configure:
+	@:
+
+override_dh_auto_build:
+	@:
+
+override_dh_auto_test:
+	@:
+
+override_dh_auto_install:
+	@:
+
+override_dh_install:
+	dh_install \
+		-X__pycache__ -X.pyc -X.pyo -X'$$py.class' \
+		-X'_cache' -X.pyright -X.pytype -X.hypothesis -X.tox -X.nox \
+		-Xhtmlcov -X.coverage -X.egg-info -X.dist-info -X.whl \
+		-Xpyproject.toml -Xsetup.py -Xsetup.cfg -XMANIFEST.in
+
+execute_after_dh_install:
+	@if find debian/spin-fm \
+		\( -type d \( -name __pycache__ -o -name '*_cache' -o -name .pyright \
+			-o -name .pytype -o -name .hypothesis -o -name .tox -o -name .nox \
+			-o -name htmlcov -o -name '*.egg-info' -o -name '*.dist-info' \) \
+		-o -type f \( -name '*.pyc' -o -name '*.pyo' -o -name '*$$py.class' \
+			-o -name '.coverage*' -o -name 'coverage.xml' -o -name '*.whl' \
+			-o -name 'pyproject.toml' -o -name 'setup.py' -o -name 'setup.cfg' \
+			-o -name 'MANIFEST.in' -o -name '__main__.py' \
+			-o -path '*/spin_fm/empty_trash.py' -o -name '*.orig' \
+			-o -name '*.rej' -o -name '*.bak' -o -name '*~' \) \) \
+		-print -quit | grep -q .; then \
+		echo 'Forbidden cache or legacy artifact in staged package' >&2; \
+		exit 1; \
+	fi
+
+override_dh_missing:
+	dh_missing --fail-missing
+
+override_dh_auto_clean:
+	python3 -B tools/source_archive.py --clean-only
