@@ -154,6 +154,9 @@ sudo dnf install python3-pytest   # only for make tests
 
 <b>Distribution package names and codec backends can vary; use the equivalent PyQt 6 Core/Widgets/D-Bus, Qt Multimedia, pyudev, and audio-backend packages when needed.</b>
 
+## Config location
+Configuration location is on <b> .config/Spin </b>
+
 ## Release hygiene
 
 All project-controlled launch, test, archive, and Debian paths use `-B`, `PYTHONDONTWRITEBYTECODE=1`, or an early `sys.dont_write_bytecode` assignment. Release gates remove and reject `__pycache__`, `.pyc`, `.pyo`, tool caches, wheel/sdist metadata, retired modules, Debian staging output, patch rejects, and editor backups.
