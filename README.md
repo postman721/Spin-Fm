@@ -1,19 +1,6 @@
-# Spin FM file manager
+# Spin FM 2.6.14
 
 Spin FM is a lightweight tabbed Qt file manager for Linux with removable-device controls, asynchronous file operations, and a seekable embedded audio player. Single click selects; double click opens. While an audio track is loaded, Spin FM advertises a native MPRIS player so `playerctl`, desktop media controls, and compatible OSD services can control it.
-
-<img width="800" height="600" alt="Image" src="https://github.com/user-attachments/assets/6860d9ec-ef6d-4e19-9cac-b7e53890e6a1" />
-
-Default theme.
-</br>
-
-<b> Notice. Currently the empty trash functionality only empties local trash. For usb / removable device trash, you need to do the final deletion of the files manually. </b>
-
-<img width="800" height="600" alt="spin_music" src="https://github.com/user-attachments/assets/e17ba081-97fa-4964-b1b3-4dccfb005f74" />
-
-Alternatve theme and music playing.
-</br>
-
 
 ## Debian installation and packaging
 
