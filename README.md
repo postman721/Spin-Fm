@@ -17,7 +17,7 @@ Alternatve theme and music playing.
 
 ## Download amd permission denied on tests
 
-Tests broke during Github upload. I disabeld them, so make all will produce Debian package,
+Tests broke during Github upload. I disabled them, so <b> make all </b> will produce Debian package.
 
 I also generated Debian_package for Debian 13+.
 
