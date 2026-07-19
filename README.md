@@ -16,11 +16,9 @@ Alternatve theme and music playing.
 
 
 ## Download amd permission denied on tests
-This usuaally happens with tests, you can fix it with this command. Run it on project's root: inside project folder:
+Tests broke during Github upload. I disabeld them, so make all will produce Debian package,
 
-    printf '%s\n' '__pycache__/' '*.py[cod]' '*$py.class' '.pytest_cache/' '.tool_cache/' '.mypy_cache/' '.pyright/' '.pytype/' '.coverage*' 'coverage.xml' 'htmlcov/' 'build/' 'dist/' '*.egg-info/' '*.dist-info/' '*.tar.gz' 'debian/tmp/' '.venv/' 'venv/' > .
-
-After this Debian package creation via make all should work.
+I also generated Debian_package for Debian 13+.
 
 ## Debian installation and packaging
 
