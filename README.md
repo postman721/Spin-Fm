@@ -2,7 +2,7 @@
 
 Spin FM is a lightweight tabbed Qt file manager for Linux with removable-device controls, asynchronous file operations, and a seekable embedded audio player. Single click selects; double click opens. While an audio track is loaded, Spin FM advertises a native MPRIS player so `playerctl`, desktop media controls, and compatible OSD services can control it.
 
-<img width="640" height="480" alt="Image" src="https://github.com/user-attachments/assets/6860d9ec-ef6d-4e19-9cac-b7e53890e6a1" />
+<img width="800" height="600" alt="Image" src="https://github.com/user-attachments/assets/6860d9ec-ef6d-4e19-9cac-b7e53890e6a1" />
 Default theme.
 
 <img width="1280" height="841" alt="spin_music" src="https://github.com/user-attachments/assets/e17ba081-97fa-4964-b1b3-4dccfb005f74" />
