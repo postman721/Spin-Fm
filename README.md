@@ -15,6 +15,11 @@ Alternative theme and music playback.
 
 ## Download and validation
 
+Makefile will automatically handle decompress of tar.gz but if you want to do it manually and omit Makefile completely use:
+    
+    tar xvf <file_name>.tar.gz 
+
+
 Release archives and the Debian package are produced from the same cache-free source tree. `make tests` runs the Python, syntax, shell, source-archive, and release-hygiene checks; `make all` performs dependency validation, tests, and the Debian build in sequence.
 
 ### Archive permissions
