@@ -138,7 +138,7 @@ def test_pypi_build_metadata_and_module_packaging_entry_are_absent() -> None:
     metainfo = (
         ROOT / "data" / "metainfo" / "net.techtimejourney.SpinFM.metainfo.xml"
     ).read_text(encoding="utf-8")
-    assert '<release version="2.6.14" date="2026-07-18">' in metainfo
+    assert '<release version="2.6.20" date="2026-07-19">' in metainfo
 
     desktop = (
         ROOT / "data" / "applications" / "net.techtimejourney.SpinFM.desktop"
@@ -413,7 +413,7 @@ def test_source_launcher_reports_the_release_version() -> None:
         timeout=10,
         env=_subprocess_environment(),
     )
-    assert result.stdout.strip() == "Spin FM 2.6.14"
+    assert result.stdout.strip() == "Spin FM 2.6.20"
     assert result.stderr == ""
 
 
@@ -435,7 +435,7 @@ def test_direct_install_layout_uses_the_same_sources(tmp_path: Path) -> None:
         timeout=10,
         env=_subprocess_environment(),
     )
-    assert result.stdout.strip() == "Spin FM 2.6.14"
+    assert result.stdout.strip() == "Spin FM 2.6.20"
 
 
 def test_supported_launchers_do_not_write_bytecode(tmp_path: Path) -> None:
@@ -552,7 +552,7 @@ def test_cache_exclusion_is_declared_for_every_distribution_path() -> None:
     assert "--check-clean" in makefile
     assert "--check-release" in makefile
     assert "-m pytest" in makefile
-    assert ".PHONY: all check tests deb" in makefile
+    assert ".PHONY: all permissions check tests deb" in makefile
     assert "dpkg-buildpackage" in makefile
     assert "dpkg-checkbuilddeps" in makefile
     for retired in ("deb-binary:", "deb-source:", "deb-release:", "lint:"):
@@ -588,10 +588,10 @@ def test_source_archive_is_deterministic_and_excludes_dirty_tree_artifacts(
         "coverage_xml": source_root / "coverage.xml",
         "htmlcov": source_root / "htmlcov" / "index.html",
         "build": source_root / "build" / "output.bin",
-        "wheel": source_root / "dist" / "spin_fm-2.6.14-py3-none-any.whl",
+        "wheel": source_root / "dist" / "spin_fm-2.6.20-py3-none-any.whl",
         "egg_info": source_root / "src" / "spin_fm.egg-info" / "PKG-INFO",
         "dist_info": source_root / "src" / "spin_fm.dist-info" / "METADATA",
-        "sdist": source_root / "spin_fm-2.6.14.tar.gz",
+        "sdist": source_root / "spin_fm-2.6.20.tar.gz",
         "debian": source_root / "debian" / "tmp" / "generated-file",
         "venv": source_root / ".venv" / "lib" / "python" / "cached.pyc",
         "venv_plain": source_root / "venv" / "lib" / "cached.pyc",
@@ -621,14 +621,14 @@ def test_source_archive_is_deterministic_and_excludes_dirty_tree_artifacts(
     with ZipFile(archive_one) as archive:
         names = archive.namelist()
         assert names
-        assert all(name.startswith("spin-fm-2.6.14/") for name in names)
+        assert all(name.startswith("spin-fm-2.6.20/") for name in names)
         assert not [name for name in names if _is_excluded_member(name)]
         assert not {PurePosixPath(name).name for name in names}.intersection(
             PYPI_METADATA
         )
         member_modes = {
             PurePosixPath(member.filename)
-            .relative_to("spin-fm-2.6.14")
+            .relative_to("spin-fm-2.6.20")
             .as_posix(): stat.S_IMODE(member.external_attr >> 16)
             for member in archive.infolist()
         }
@@ -771,7 +771,7 @@ def test_cache_symlink_cleanup_never_follows_the_target(tmp_path: Path) -> None:
 def test_source_archive_can_be_written_inside_the_source_tree(tmp_path: Path) -> None:
     source_root = tmp_path / "spin-fm-source"
     _copy_source_tree(source_root)
-    output = source_root / "release" / "spin-fm-2.6.14-source.zip"
+    output = source_root / "release" / "spin-fm-2.6.20-source.zip"
     output.parent.mkdir()
 
     _SOURCE_ARCHIVE["build_archive"](source_root, output)
@@ -786,12 +786,12 @@ def test_source_archive_can_be_written_inside_the_source_tree(tmp_path: Path) ->
 @pytest.mark.parametrize(
     "bad_member",
     (
-        "spin-fm-2.6.14/src/spin_fm/__pycache__/module.pyc",
-        "spin-fm-2.6.14/dist/spin_fm-2.6.14-py3-none-any.whl",
-        "spin-fm-2.6.14/examples/nested/setup.py",
-        "spin-fm-2.6.14/src/spin_fm/__main__.py",
-        "spin-fm-2.6.14/src/spin_fm/empty_trash.py",
-        "spin-fm-2.6.14/README.md.orig",
+        "spin-fm-2.6.20/src/spin_fm/__pycache__/module.pyc",
+        "spin-fm-2.6.20/dist/spin_fm-2.6.20-py3-none-any.whl",
+        "spin-fm-2.6.20/examples/nested/setup.py",
+        "spin-fm-2.6.20/src/spin_fm/__main__.py",
+        "spin-fm-2.6.20/src/spin_fm/empty_trash.py",
+        "spin-fm-2.6.20/README.md.orig",
     ),
 )
 def test_archive_verifier_rejects_excluded_members(
@@ -800,8 +800,8 @@ def test_archive_verifier_rejects_excluded_members(
 ) -> None:
     archive_path = tmp_path / "bad.zip"
     members = {
-        "spin-fm-2.6.14/main.py": b"pass\n",
-        "spin-fm-2.6.14/src/spin_fm/__init__.py": b'__version__ = "2.6.14"\n',
+        "spin-fm-2.6.20/main.py": b"pass\n",
+        "spin-fm-2.6.20/src/spin_fm/__init__.py": b'__version__ = "2.6.20"\n',
         bad_member: b"generated",
     }
     with ZipFile(archive_path, "w", compression=ZIP_DEFLATED) as archive:

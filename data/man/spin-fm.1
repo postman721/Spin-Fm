@@ -1,4 +1,4 @@
-.TH SPIN-FM 1 "18 July 2026" "Spin FM 2.6.14" "User Commands"
+.TH SPIN-FM 1 "19 July 2026" "Spin FM 2.6.20" "User Commands"
 .SH NAME
 spin-fm \- lightweight tabbed file manager for Linux
 .SH SYNOPSIS
@@ -10,7 +10,7 @@ Spin FM browses local files in a tabbed Qt interface. Folder arguments open in t
 .PP
 Copy, move, delete, Trash, storage-discovery, and removable-device commands are performed outside the graphical interface thread.
 .PP
-Single-clicking selects an item. Double-clicking, pressing Return, or pressing keypad Enter activates it. Activating a supported audio file opens the built-in player. Playback supports common formats such as MP3, Ogg/Vorbis, Opus, FLAC, WAV, and M4A when the installed Qt Multimedia backend provides the required codec.
+Single-clicking selects an item, places its complete path in the location bar, and asynchronously shows file size or recursive folder-content size, modification time, and MIME information in a persistent status field. The independent module connects each real file view through its native clicked signal, binds future tabs once, cancels stale folder scans, and retains only one running and one latest pending inspection. Double-clicking, pressing Return, or pressing keypad Enter activates the item. Activating a supported audio file opens the built-in player. Playback supports common formats such as MP3, Ogg/Vorbis, Opus, FLAC, WAV, and M4A when the installed Qt Multimedia backend provides the required codec.
 .PP
 The player provides a click-or-drag timeline, keyboard and mouse-wheel seeking, 10-second rewind and forward controls, mute, persistent volume, and desktop-player fallback. Seeking controls are disabled for streams that do not expose a seekable duration.
 .PP
@@ -63,6 +63,9 @@ Default logging level when --log-level is not supplied.
 .TP
 .B SPIN_FM_NATIVE_STYLE
 Set to 1, true, or yes to keep the desktop's native Qt style instead of Fusion.
+.TP
+.B SPIN_FM_FILE_INFO
+Set to 0, false, no, or off to disable the independent selected-file information integration for troubleshooting.
 .TP
 .B SPIN_FM_WAYLAND_OSD
 Set to 0, false, no, off, or disabled to turn off optional Wayland_OSD integration. Set to force or always to permit detection outside an identified Wayland session.

@@ -7,7 +7,8 @@ Build-Depends:
  python3-pyqt6 (>= 6.4),
  python3-pyqt6.qtmultimedia,
  python3-pytest,
- python3-pyudev
+ python3-pyudev,
+ python3-magic
 Standards-Version: 4.7.4
 Rules-Requires-Root: no
 Homepage: https://techtimejourney.net/
@@ -21,6 +22,8 @@ Depends:
  python3-pyqt6 (>= 6.4),
  python3-pyqt6.qtmultimedia,
  python3-pyudev,
+ python3-magic,
+ file,
  libglib2.0-bin,
  udisks2,
  util-linux,
@@ -32,5 +35,7 @@ Depends:
 Description: lightweight tabbed file manager for Linux
  Spin FM is a compact Qt file manager with tabbed navigation, configurable
  themes, drag and drop, freedesktop Trash support, removable USB storage
- controls, and an embedded audio player. Long-running file and device operations
- run outside the UI thread, while multimedia support is initialized on demand.
+ controls, selected-item MIME, file-size, and recursive folder-size reporting,
+ and an embedded audio player. Long-running file, device, and metadata
+ operations run outside the UI thread, while multimedia support is initialized
+ on demand.

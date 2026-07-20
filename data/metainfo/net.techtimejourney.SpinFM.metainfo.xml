@@ -6,7 +6,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0-or-later</project_license>
   <description>
-    <p>Spin FM is a compact Qt file manager with tabbed navigation, drag and drop, Trash support, configurable themes, removable USB device controls, and an embedded audio player.</p>
+    <p>Spin FM is a compact Qt file manager with tabbed navigation, selected-file MIME and metadata reporting, drag and drop, Trash support, configurable themes, removable USB device controls, and an embedded audio player.</p>
     <p>Long-running copy, move, delete, storage, and device operations run outside the interface thread to keep navigation responsive.</p>
   </description>
   <launchable type="desktop-id">net.techtimejourney.SpinFM.desktop</launchable>
@@ -19,6 +19,36 @@
     <category>FileManager</category>
   </categories>
   <releases>
+    <release version="2.6.20" date="2026-07-19">
+      <description>
+        <p>Makes file and recursive folder sizes reliably visible through direct tab-view click integration, a status field that yields to operation messages, and MIME-failure isolation.</p>
+      </description>
+    </release>
+    <release version="2.6.19" date="2026-07-19">
+      <description>
+        <p>Unifies startup in main.py and repairs python3-magic MIME detection across supported binding APIs.</p>
+      </description>
+    </release>
+    <release version="2.6.18" date="2026-07-19">
+      <description>
+        <p>Preserves executable permissions across GitHub Actions artifact downloads with a tar-based workflow, automatic mode repair, and checkout-independent source ZIP permissions.</p>
+      </description>
+    </release>
+    <release version="2.6.17" date="2026-07-19">
+      <description>
+        <p>Uses one application-level Qt event filter for selected-file metadata in every current and future tab, with drag-release protection and no per-view signal registration.</p>
+      </description>
+    </release>
+    <release version="2.6.16" date="2026-07-19">
+      <description>
+        <p>Connects the independent selected-file size, modification-time, and MIME module to the real click signal in existing and newly opened tabs while leaving the core window and tabs implementation unchanged.</p>
+      </description>
+    </release>
+    <release version="2.6.15" date="2026-07-19">
+      <description>
+        <p>Restores selected-file path, size, modification time, and MIME reporting through an independent bounded module.</p>
+      </description>
+    </release>
     <release version="2.6.14" date="2026-07-18">
       <description>
         <p>Keeps every Trash-location row on the active application theme before selection, including USB and mounted-volume Trash.</p>

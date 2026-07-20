@@ -6,10 +6,10 @@ set -eu
 export PYTHONDONTWRITEBYTECODE=1
 
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-source_main="$script_dir/../main.py"
+source_entry="$script_dir/../main.py"
 
-if [ -f "$source_main" ]; then
-    exec python3 -B "$source_main" "$@"
+if [ -f "$source_entry" ]; then
+    exec python3 -B "$source_entry" "$@"
 fi
 
 exec python3 -B /usr/share/spin-fm/main.py "$@"

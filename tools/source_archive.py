@@ -98,6 +98,43 @@ LICENSE_MARKERS = {
 }
 
 
+EXECUTABLE_MANIFEST = Path(__file__).with_name("executable_paths.txt")
+
+
+def _load_canonical_executable_paths() -> frozenset[PurePosixPath]:
+    """Load the audited executable list independently of checkout file modes."""
+    try:
+        lines = EXECUTABLE_MANIFEST.read_text(encoding="utf-8").splitlines()
+    except OSError as exc:
+        raise RuntimeError(f"could not read {EXECUTABLE_MANIFEST}: {exc}") from exc
+
+    paths: list[PurePosixPath] = []
+    for line_number, raw_line in enumerate(lines, start=1):
+        value = raw_line.split("#", 1)[0].strip()
+        if not value:
+            continue
+        executable = PurePosixPath(value)
+        if (
+            executable.is_absolute()
+            or ".." in executable.parts
+            or executable.as_posix() != value
+        ):
+            raise RuntimeError(
+                f"invalid executable path at {EXECUTABLE_MANIFEST}:"
+                f"{line_number}: {value!r}"
+            )
+        paths.append(executable)
+
+    if not paths or len(paths) != len(set(paths)):
+        raise RuntimeError(
+            f"{EXECUTABLE_MANIFEST} is empty or contains duplicate paths"
+        )
+    return frozenset(paths)
+
+
+CANONICAL_EXECUTABLE_PATHS = _load_canonical_executable_paths()
+
+
 def _is_cache_directory_name(name: str) -> bool:
     return name in CACHE_DIR_NAMES or name.endswith(CACHE_DIR_SUFFIXES)
 
@@ -341,6 +378,7 @@ def _iter_source_entries(
 def _write_entry(
     archive: ZipFile,
     path: Path,
+    source_relative: PurePosixPath,
     archive_name: PurePosixPath,
     timestamp: tuple[int, int, int, int, int, int],
 ) -> None:
@@ -354,10 +392,12 @@ def _write_entry(
         mode = stat.S_IFLNK | 0o777
     elif stat.S_ISREG(file_stat.st_mode):
         data = path.read_bytes()
-        # Git only tracks the executable bit. Normalize all other permission
-        # bits so archives remain reproducible across different checkout
-        # umasks, shared repositories, and build users.
-        permissions = 0o755 if file_stat.st_mode & 0o111 else 0o644
+        # GitHub workflow ZIP artifacts normalize all regular files to 0644.
+        # Restore the audited executable set from the manifest rather than
+        # trusting the checkout/archive mode that happened to reach this build.
+        permissions = (
+            0o755 if source_relative in CANONICAL_EXECUTABLE_PATHS else 0o644
+        )
         mode = stat.S_IFREG | permissions
     else:
         raise RuntimeError(f"unsupported source entry type: {path}")
@@ -450,6 +490,11 @@ def verify_archive(archive_path: Path) -> tuple[int, int]:
                 f"{root_name}/LICENSE",
                 f"{root_name}/main.py",
                 f"{root_name}/src/spin_fm/__init__.py",
+                f"{root_name}/tools/executable_paths.txt",
+                *(
+                    f"{root_name}/{relative.as_posix()}"
+                    for relative in CANONICAL_EXECUTABLE_PATHS
+                ),
             }
             missing = sorted(required.difference(names))
             if missing:
@@ -459,12 +504,21 @@ def verify_archive(archive_path: Path) -> tuple[int, int]:
                 )
 
             bad_modes: list[str] = []
-            for member in archive.infolist():
+            for member, project_path in zip(
+                archive.infolist(), project_paths, strict=False
+            ):
                 mode = member.external_attr >> 16
                 permissions = stat.S_IMODE(mode)
                 if stat.S_ISREG(mode):
-                    if permissions not in {0o644, 0o755}:
-                        bad_modes.append(f"{member.filename} ({permissions:o})")
+                    expected = (
+                        0o755
+                        if project_path in CANONICAL_EXECUTABLE_PATHS
+                        else 0o644
+                    )
+                    if permissions != expected:
+                        bad_modes.append(
+                            f"{member.filename} ({permissions:o}, expected {expected:o})"
+                        )
                 elif stat.S_ISLNK(mode):
                     if permissions != 0o777:
                         bad_modes.append(f"{member.filename} ({permissions:o})")
@@ -511,7 +565,13 @@ def build_archive(root: Path, output: Path) -> tuple[int, int]:
                 key=lambda item: item[1].as_posix(),
             )
             for path, relative in entries:
-                _write_entry(archive, path, prefix / relative, timestamp)
+                _write_entry(
+                    archive,
+                    path,
+                    relative,
+                    prefix / relative,
+                    timestamp,
+                )
 
         counts = verify_archive(temporary_path)
         # NamedTemporaryFile is private by default. Publish source releases with

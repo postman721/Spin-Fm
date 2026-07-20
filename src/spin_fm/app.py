@@ -8,7 +8,8 @@ import logging
 import os
 import signal
 import sys
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
+from typing import Any
 
 from . import __version__
 from .config import APP_ID, APP_NAME, ORGANIZATION_DOMAIN, ORGANIZATION_NAME
@@ -46,7 +47,11 @@ def configure_logging(level: str) -> None:
     )
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(
+    argv: Sequence[str] | None = None,
+    *,
+    window_setup: Callable[[Any], Any] | None = None,
+) -> int:
     args = build_parser().parse_args(list(argv) if argv is not None else None)
     configure_logging(args.log_level)
 
@@ -113,5 +118,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     from .main_window import MainWindow
 
     window = MainWindow(startup_paths=args.paths)
+    if window_setup is not None:
+        try:
+            window_setup(window)
+        except Exception:
+            logging.getLogger(__name__).exception(
+                "Unable to initialize a Spin FM window extension"
+            )
+            try:
+                window.show_status(
+                    "An optional Spin FM integration could not be initialized",
+                    8_000,
+                )
+            except Exception:
+                pass
     window.show()
     return int(app.exec())

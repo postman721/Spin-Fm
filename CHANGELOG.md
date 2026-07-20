@@ -1,5 +1,46 @@
 # Changelog
 
+## 2.6.20 — 2026-07-19
+
+- Replace the fragile application-wide mouse filter with direct, one-time `clicked(QModelIndex)` bindings for every existing and future file tab.
+- Add cancellable asynchronous recursive folder-size calculation with item counts, mount-boundary protection, and partial-result reporting.
+- Add a normal right-elided file-information status field that keeps the selected size first, yields to core operation messages, and returns afterward.
+- Isolate `python3-magic` failures so a broken MIME binding can never suppress file size or modification time.
+- Add file, folder, direct-signal, persistent-status, real-click, and new-tab regression coverage.
+
+## 2.6.19 — 2026-07-19
+
+- Make main.py the only application bootstrap and remove stale references to the nonexistent extension_main.py from the launcher and Debian package.
+- Attach the independent file-information module through an explicit window setup callback instead of replacing MainWindow at runtime.
+- Support python3-magic class, module, structured-result, and legacy cookie APIs, including MIME encodings and older bytes-path implementations.
+- Add MIME compatibility and unified-launcher regression tests.
+
+## 2.6.18 — 2026-07-19
+
+- Preserve executable permissions across GitHub Actions artifact downloads by uploading one tar file without artifact re-zipping and verifying it in a separate download job.
+- Add an interpreter-driven permission repair/check tool and make every check, test, and Debian build restore the audited executable set before running.
+- Make source ZIP permissions independent of checkout modes, so archives built after GitHub web upload or artifact download retain canonical `0755` scripts and `0644` data files.
+- Add mode-loss, source-archive, Makefile, and GitHub workflow regression tests plus dedicated GitHub Actions documentation.
+
+## 2.6.17 — 2026-07-19
+
+- Replace per-tab `clicked(QModelIndex)` connections with one application-level Qt event filter.
+- Make all existing and future file tabs work automatically without tab scans, identity registries, or per-view callback storage.
+- Ignore drag releases using Qt's configured drag-distance threshold while leaving normal selection, double-click, and drag behavior untouched.
+- Add real mouse-event regression tests proving that artificial `clicked` emissions are no longer the integration path.
+
+## 2.6.16 — 2026-07-19
+
+- Integrate the independent file-information module with the real Qt `clicked(QModelIndex)` signal.
+- Bind every existing tab during startup and each newly activated tab at runtime without editing `main.py`, `app.py`, `main_window.py`, or `tabs.py`.
+- Prevent duplicate view connections and release per-tab callback references when tabs are destroyed or the application shuts down.
+- Add Qt regression tests that emit actual click signals in the first tab and a newly created tab and verify the displayed file size.
+
+## 2.6.15 — 2026-07-19
+
+- Restore click-selected path, size, modification time, and MIME details through an independent bounded background module.
+- Integrate the legacy parent callback at runtime while keeping main.py, app.py, main_window.py, and tabs.py unchanged.
+
 ## 2.6.14 — 2026-07-18
 
 - Prevent the second or mounted-volume Trash chooser row from inheriting a white system alternate-row color before it is selected.
