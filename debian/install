@@ -1,7 +1,0 @@
-bin/spin-fm usr/bin
-main.py usr/share/spin-fm
-src usr/share/spin-fm
-data/applications/net.techtimejourney.SpinFM.desktop usr/share/applications
-data/metainfo/net.techtimejourney.SpinFM.metainfo.xml usr/share/metainfo
-data/icons/hicolor/scalable/apps/spin-fm.svg usr/share/icons/hicolor/scalable/apps
-data/man/spin-fm.1 usr/share/man/man1
