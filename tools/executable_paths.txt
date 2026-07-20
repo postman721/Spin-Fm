@@ -1,8 +1,0 @@
-# Canonical executable files in source archives and GitHub CI checkouts.
-bin/spin-fm
-debian/rules
-debian/tests/smoke
-main.py
-tools/check_syntax.py
-tools/normalize_permissions.py
-tools/source_archive.py
