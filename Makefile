@@ -1,57 +1,51 @@
 SHELL := /bin/sh
-PYTHON ?= python3
-DPKG_BUILDPACKAGE ?= dpkg-buildpackage
-DPKG_CHECKBUILDDEPS ?= dpkg-checkbuilddeps
 
-export PYTHONDONTWRITEBYTECODE := 1
-export PYTEST_DISABLE_PLUGIN_AUTOLOAD := 1
-export QT_QPA_PLATFORM := offscreen
+ARCHIVE ?= spin-fm.tar.gz
+SOURCE_DIR ?= $(strip $(shell tar -tzf "$(ARCHIVE)" 2>/dev/null | awk -F/ 'NF { print $$1; exit }'))
+EXTRACT_STAMP := .spin-fm-source-extracted
 
 .NOTPARALLEL:
 .DEFAULT_GOAL := all
-.PHONY: all permissions check tests deb
+.PHONY: all prepare permissions check tests deb clean help
 
-all:
-	tar xvf spin-fm.tar.gz
-	@$(MAKE) --no-print-directory check
-	@$(MAKE) --no-print-directory tests
-	@$(MAKE) --no-print-directory deb
+all: prepare
+	@$(MAKE) -C "$(SOURCE_DIR)" --no-print-directory all
 
-# GitHub artifact ZIPs normalize regular files to 0644. Invoke the repair tool
-# through Python so this target works even when the tool's own execute bit was
-# stripped during upload/download.
-permissions:
-	@$(PYTHON) -B tools/normalize_permissions.py --fix
+prepare: $(EXTRACT_STAMP)
 
-# Check the native Debian toolchain and every declared Build-Depends.
-check: permissions
-	@command -v $(PYTHON) >/dev/null
-	@command -v $(DPKG_BUILDPACKAGE) >/dev/null
-	@command -v $(DPKG_CHECKBUILDDEPS) >/dev/null
-	@command -v dpkg-deb >/dev/null
-	@$(DPKG_CHECKBUILDDEPS)
-	@$(PYTHON) -B -c "import magic, pytest, pyudev; from PyQt6 import QtCore, QtDBus, QtMultimedia, QtWidgets"
-	@echo "Spin FM dependencies are available."
+$(EXTRACT_STAMP): $(ARCHIVE)
+	@set -eu; \
+	archive="$(ARCHIVE)"; source_dir="$(SOURCE_DIR)"; \
+	[ -n "$$source_dir" ] || { echo "Unable to determine the source directory in $$archive." >&2; exit 1; }; \
+	[ -f "$$archive" ] || { echo "Missing source archive: $$archive" >&2; exit 1; }; \
+	if tar -tzf "$$archive" | awk '/^\// || /(^|\/)\.\.($$|\/)/ { bad=1 } END { exit bad ? 0 : 1 }'; then \
+		echo "Unsafe path found in $$archive." >&2; exit 1; \
+	fi; \
+	roots=$$(tar -tzf "$$archive" | awk -F/ 'NF && $$1 != "" { print $$1 }' | sort -u); \
+	[ "$$(printf '%s\n' "$$roots" | sed '/^$$/d' | wc -l)" -eq 1 ] || { \
+		echo "$$archive must contain exactly one top-level source directory." >&2; exit 1; \
+	}; \
+	[ "$$roots" = "$$source_dir" ] || { \
+		echo "Archive root '$$roots' does not match SOURCE_DIR '$$source_dir'." >&2; exit 1; \
+	}; \
+	rm -rf -- "$$source_dir"; \
+	tar -xzf "$$archive"; \
+	[ -f "$$source_dir/Makefile" ] || { echo "No Makefile found in extracted source." >&2; exit 1; }; \
+	touch "$@"
 
-# Run runtime tests plus syntax, shell, cache, and legacy-file release gates.
-tests: permissions
-	@$(PYTHON) -B tools/source_archive.py --clean-only
-	@PYTHONPATH="src$${PYTHONPATH:+:$$PYTHONPATH}" $(PYTHON) -B -m pytest -p no:cacheprovider --assert=plain
-	@$(PYTHON) -B tools/check_syntax.py
-	@sh -n bin/spin-fm debian/tests/smoke
-	@$(PYTHON) -B tools/source_archive.py --check-clean
-	@$(PYTHON) -B tools/source_archive.py --check-release
+permissions check tests deb: prepare
+	@$(MAKE) -C "$(SOURCE_DIR)" --no-print-directory $@
 
-# Build only the unsigned Debian binary package and verify its contents.
-deb: permissions
-	@$(PYTHON) -B tools/source_archive.py --clean-only
-	@$(PYTHON) -B tools/source_archive.py --check-release
-	@$(DPKG_BUILDPACKAGE) -us -uc -b
-	@set -eu; found=0; \
-	for package in ../spin-fm_*.deb ../spin-fm-dbgsym_*.deb; do \
-		[ -f "$$package" ] || continue; found=1; \
-		if dpkg-deb --contents "$$package" | grep -E '(__pycache__/|\.py[co]$$|\$$py\.class$$|\.egg-info/|\.dist-info/)'; then \
-			echo "Forbidden generated Python artifact in $$package" >&2; exit 1; \
-		fi; \
-	done; \
-	[ "$$found" -eq 1 ] || { echo "No Debian package was produced." >&2; exit 1; }
+clean:
+	@set -eu; \
+	[ -z "$(SOURCE_DIR)" ] || rm -rf -- "$(SOURCE_DIR)"; \
+	rm -f "$(EXTRACT_STAMP)"
+
+help:
+	@printf '%s\n' \
+		'make all          Extract, validate, test, and build the Debian package' \
+		'make check        Extract and verify build dependencies' \
+		'make tests        Extract and run the project test suite' \
+		'make deb          Extract and build the Debian package' \
+		'make permissions  Restore required executable permissions' \
+		'make clean        Remove the extracted source tree'
