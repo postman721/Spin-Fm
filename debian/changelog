@@ -1,18 +1,16 @@
-spin-fm (2.6.20) unstable; urgency=medium
+spin-fm (2.6.21) unstable; urgency=medium
 
-  * Replace the fragile application-wide mouse filter with direct, one-time
-    `clicked(QModelIndex)` bindings for every existing and future file tab.
-  * Add cancellable asynchronous recursive folder-size calculation with item
-    counts, mount-boundary protection, and partial-result reporting.
-  * Add a normal right-elided file-information status field that keeps the
-    selected size first, yields to core operation messages, and returns
-    afterward.
-  * Isolate `python3-magic` failures so a broken MIME binding can never suppress
-    file size or modification time.
-  * Add file, folder, direct-signal, persistent-status, real-click, and new-tab
-    regression coverage.
+  * Align file-information tests with the intentional MiB-only status format.
+  * Keep selected paths in the location bar rather than duplicating them in status text.
+  * Preserve asynchronous metadata inspection while verifying queued click handling.
+  * Keep source tests usable when a download tool omits dotfiles.
+  * Replace the fragile application-wide mouse filter with direct, one-time `clicked(QModelIndex)` bindings for every existing and future file tab.
+  * Add cancellable asynchronous recursive folder-size calculation with item counts, mount-boundary protection, and partial-result reporting.
+  * Add a normal right-elided file-information status field that keeps the selected size first, yields to core operation messages, and returns afterward.
+  * Isolate `python3-magic` failures so a broken MIME binding can never suppress file size or modification time.
+  * Add file, folder, direct-signal, persistent-status, real-click, and new-tab regression coverage.
 
- -- JJ Posti <jjposti@techtimejourney.net>  Sun, 19 Jul 2026 23:45:00 +0300
+ -- JJ Posti <techtimejourney.net>  Mon, 20 Jul 2026 12:00:00 +0300
 
 spin-fm (2.6.19) unstable; urgency=medium
 

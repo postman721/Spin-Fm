@@ -106,7 +106,7 @@ def test_source_zip_restores_modes_without_chmod_on_checkout(tmp_path: Path) -> 
 
     with ZipFile(output) as archive:
         members = {
-            PurePosixPath(member.filename).relative_to("spin-fm-2.6.20"): stat.S_IMODE(
+            PurePosixPath(member.filename).relative_to("spin-fm-2.6.21"): stat.S_IMODE(
                 member.external_attr >> 16
             )
             for member in archive.infolist()

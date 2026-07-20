@@ -19,7 +19,7 @@
     <category>FileManager</category>
   </categories>
   <releases>
-    <release version="2.6.20" date="2026-07-19">
+    <release version="2.6.21" date="2026-07-19">
       <description>
         <p>Makes file and recursive folder sizes reliably visible through direct tab-view click integration, a status field that yields to operation messages, and MIME-failure isolation.</p>
       </description>

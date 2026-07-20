@@ -53,7 +53,7 @@ make all     # run check, tests, and deb in that order
 Install the resulting package:
 
 ```sh
-sudo apt install ../spin-fm_2.6.20_all.deb
+sudo apt install ../spin-fm_2.6.21_all.deb
 ```
 
 The Debian package installs application-private source under `/usr/share/spin-fm`; it does not build a wheel, sdist, or Python-index package. `make check`, `make deb`, and `make all` validate the PyQt 6 Debian package path.
@@ -144,8 +144,9 @@ request.
 
 Results are written to a normal, right-elided status field beside the disk
 indicator. The size is placed first, so it remains visible even when the status
-bar is narrow; the full path is also kept in the location bar and in the field's
-tooltip. Copy, move, device, and other core status messages temporarily replace
+bar is narrow. The complete path stays in the location bar and is intentionally
+not duplicated in the status text. Copy, move, device, and other core status
+messages temporarily replace
 this field and the selected-item information returns afterward. Folder results
 include logical content size, file/folder counts, and a partial-result warning
 when entries are inaccessible.

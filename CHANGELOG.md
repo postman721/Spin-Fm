@@ -1,6 +1,11 @@
 # Changelog
 
-## 2.6.20 — 2026-07-19
+## 2.6.21 — 2026-07-20
+
+- Align file-information tests with the intentional MiB-only status format.
+- Keep selected paths in the location bar rather than duplicating them in status text.
+- Preserve asynchronous metadata inspection while verifying queued click handling.
+- Keep source tests usable when a download tool omits dotfiles.
 
 - Replace the fragile application-wide mouse filter with direct, one-time `clicked(QModelIndex)` bindings for every existing and future file tab.
 - Add cancellable asynchronous recursive folder-size calculation with item counts, mount-boundary protection, and partial-result reporting.

@@ -88,7 +88,8 @@ def test_clicked_signal_populates_location_size_and_status(
         view.clicked.emit(index)
         _process_until(
             app,
-            lambda: str(selected.resolve()) in integration._status_label.full_text,
+            lambda: "File type:" in integration._status_label.full_text
+            and "Name: selected file.txt" in integration._status_label.full_text,
         )
 
         assert integration._serial == serial_before + 1
@@ -142,14 +143,18 @@ def test_real_mouse_click_uses_the_bound_qt_signal(
         _click_index(app, view, index)
         _process_until(
             app,
-            lambda: str(selected.resolve()) in integration._status_label.full_text,
+            lambda: "File type:" in integration._status_label.full_text
+            and "Name: drag-source.bin" in integration._status_label.full_text,
         )
 
         assert integration._serial == serial_before + 1
         assert window.tabs.address_bar.text() == str(selected.resolve())
-        assert "Size: 0.002 MiB (2.00 KiB, 2,048 bytes)" in (
+        assert "Size: 0.002 MiB Name: drag-source.bin" in (
             integration._status_label.full_text
         )
+        assert "KiB" not in integration._status_label.full_text
+        assert "bytes" not in integration._status_label.full_text
+        assert "Path:" not in integration._status_label.full_text
     finally:
         _shutdown_window(app, window, integration)
 
@@ -190,12 +195,16 @@ def test_future_tab_is_bound_once_and_reports_size(
         view.clicked.emit(index)
         _process_until(
             app,
-            lambda: str(selected.resolve()) in integration._status_label.full_text,
+            lambda: "File type:" in integration._status_label.full_text
+            and "Name: payload.bin" in integration._status_label.full_text,
         )
 
         assert integration._serial == serial_before + 1
         status = integration._status_label.full_text
-        assert "Size: 0.004 MiB (4.00 KiB, 4,096 bytes)" in status
+        assert "Size: 0.004 MiB Name: payload.bin" in status
+        assert "KiB" not in status
+        assert "bytes" not in status
+        assert "Path:" not in status
         assert window.tabs.address_bar.text() == str(selected.resolve())
     finally:
         _shutdown_window(app, window, integration)
@@ -230,7 +239,10 @@ def test_folder_click_reports_recursive_size(app, monkeypatch, tmp_path: Path) -
         )
 
         status = integration._status_label.full_text
-        assert "Folder size: 0.003 MiB (3.00 KiB, 3,072 bytes)" in status
+        assert "Folder size: 0.003 MiB Name: selected-folder" in status
+        assert "KiB" not in status
+        assert "bytes" not in status
+        assert "Path:" not in status
         assert "Contents: 3 items (2 files, 1 folder)" in status
         assert "Folder size:" in integration._status_label.text()
         assert window.tabs.address_bar.text() == str(selected.resolve())

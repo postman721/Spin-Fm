@@ -93,7 +93,10 @@ def test_inspect_path_formats_size_time_and_mime(tmp_path: Path, monkeypatch) ->
     assert details.path == str(sample.resolve())
     assert details.size_bytes == 1536
     assert details.mime_type == "application/x-spin-test; charset=binary"
-    assert "0.001 MiB (1.50 KiB, 1,536 bytes)" in message
+    assert message.startswith("Size: 0.001 MiB Name: sample.bin")
+    assert "KiB" not in message
+    assert "bytes" not in message
+    assert "Path:" not in message
     assert "Last modified:" in message
     assert "File type: application/x-spin-test; charset=binary" in message
 
@@ -115,7 +118,10 @@ def test_inspect_directory_reports_recursive_content_size(tmp_path: Path) -> Non
     assert details.skipped_items == 0
     assert details.mime_type == "inode/directory"
     assert "Folder size:" in message
-    assert "12 bytes" in message
+    assert message.startswith("Folder size: 0.000 MiB Name: folder")
+    assert "KiB" not in message
+    assert "bytes" not in message
+    assert "Path:" not in message
     assert "Contents: 3 items (2 files, 1 folder)" in message
 
 
@@ -165,7 +171,10 @@ def test_broken_python_magic_cannot_suppress_file_size(
     assert details.size_bytes == 7
     assert details.mime_type == "text/plain"
     assert message.startswith("Size:")
-    assert "7 bytes" in message
+    assert message.startswith("Size: 0.000 MiB Name: selected.txt")
+    assert "KiB" not in message
+    assert "bytes" not in message
+    assert "Path:" not in message
 
 
 def test_python_magic_official_class_api_preserves_encoding(
@@ -294,7 +303,8 @@ def test_click_handler_updates_location_and_queues_latest_request(
     assert integration._pending_request.path == resolved
     assert integration._pending_request.view_id == id(view)
     assert not integration._pending_request.cancel_event.is_set()
-    assert messages == [f"Reading file information for {sample.name}…"]
+    assert len(messages) == 1
+    assert messages == ["Reading file information for selected.txt…"]
 
 
 def test_direct_view_binding_calls_click_handler_once(tmp_path: Path) -> None:

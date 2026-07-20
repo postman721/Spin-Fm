@@ -7,7 +7,7 @@ export PYTHONDONTWRITEBYTECODE=1
 spin-fm --version
 test -r /usr/share/spin-fm/main.py
 test ! -e /usr/share/spin-fm/extension_main.py
-PYTHONPATH=/usr/share/spin-fm/src python3 -B -c 'import os, tempfile, spin_fm; from spin_fm.file_info_extension import _python_magic_mime, parent_directory; f=tempfile.NamedTemporaryFile(suffix="", delete=False); f.write(b"Spin FM python magic integration\n"); f.close(); detected=_python_magic_mime(f.name); os.unlink(f.name); assert spin_fm.__version__ == "2.6.20"; assert parent_directory("/") == "/"; assert detected.startswith("text/plain"), detected'
+PYTHONPATH=/usr/share/spin-fm/src python3 -B -c 'import os, tempfile, spin_fm; from spin_fm.file_info_extension import _python_magic_mime, parent_directory; f=tempfile.NamedTemporaryFile(suffix="", delete=False); f.write(b"Spin FM python magic integration\n"); f.close(); detected=_python_magic_mime(f.name); os.unlink(f.name); assert spin_fm.__version__ == "2.6.21"; assert parent_directory("/") == "/"; assert detected.startswith("text/plain"), detected'
 PYTHONPATH=/usr/share/spin-fm/src python3 -B -c 'from spin_fm.audio import is_supported_audio_file; assert is_supported_audio_file("track.mp3"); assert is_supported_audio_file("track.ogg")'
 python3 -B -c 'from PyQt6 import QtDBus, QtMultimedia'
 command -v gio >/dev/null
