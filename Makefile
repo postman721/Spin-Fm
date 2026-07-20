@@ -12,8 +12,9 @@ export QT_QPA_PLATFORM := offscreen
 .PHONY: all permissions check tests deb
 
 all:
+	tar xvf spin-fm.tar.gz
 	@$(MAKE) --no-print-directory check
-#	@$(MAKE) --no-print-directory tests
+	@$(MAKE) --no-print-directory tests
 	@$(MAKE) --no-print-directory deb
 
 # GitHub artifact ZIPs normalize regular files to 0644. Invoke the repair tool
