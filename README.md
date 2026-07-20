@@ -15,7 +15,7 @@ Alternative theme and music playback.
 
 ## Download and validation
 
-Makefile will automatically handle decompress of tar.gz but if you want to do it manually and omit Makefile completely use:
+Makefile will automatically handle decompress of tar.gz and setup but if you want to have just a raw archive and omit Makefile use:
     
     tar xvf <file_name>.tar.gz 
 
