@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.6.22 — 2026-07-20
+
+- Restore and require the canonical `.gitattributes` distribution policy.
+- Validate `.gitattributes`, `.gitignore`, and Debian source exclusions before building source archives.
+- Require both Git policy files in every published source ZIP.
+- Add regression coverage for missing or incomplete distribution-policy files.
+
 ## 2.6.21 — 2026-07-20
 
 - Align file-information tests with the intentional MiB-only status format.

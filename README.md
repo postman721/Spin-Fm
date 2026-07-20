@@ -29,6 +29,12 @@ python3 -B tools/normalize_permissions.py --fix
 python3 -B tools/normalize_permissions.py --check
 ```
 
+The repository includes both `.gitignore` and `.gitattributes`. The latter
+normalizes LF line endings and marks caches, virtual environments, and generated
+Debian artifacts with `export-ignore`. The source-archive builder requires and
+validates both files, so an incomplete release archive is rejected before it is
+published.
+
 ## Debian installation and packaging
 
 Install the native build and test dependencies:
@@ -53,7 +59,7 @@ make all     # run check, tests, and deb in that order
 Install the resulting package:
 
 ```sh
-sudo apt install ../spin-fm_2.6.21_all.deb
+sudo apt install ../spin-fm_2.6.22_all.deb
 ```
 
 The Debian package installs application-private source under `/usr/share/spin-fm`; it does not build a wheel, sdist, or Python-index package. `make check`, `make deb`, and `make all` validate the PyQt 6 Debian package path.

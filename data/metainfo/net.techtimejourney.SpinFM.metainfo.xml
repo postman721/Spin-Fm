@@ -19,6 +19,9 @@
     <category>FileManager</category>
   </categories>
   <releases>
+    <release version="2.6.22" date="2026-07-20">
+      <description><p>Restores and validates Git distribution policy metadata in every source release.</p></description>
+    </release>
     <release version="2.6.21" date="2026-07-19">
       <description>
         <p>Makes file and recursive folder sizes reliably visible through direct tab-view click integration, a status field that yields to operation messages, and MIME-failure isolation.</p>

@@ -138,7 +138,7 @@ def test_pypi_build_metadata_and_module_packaging_entry_are_absent() -> None:
     metainfo = (
         ROOT / "data" / "metainfo" / "net.techtimejourney.SpinFM.metainfo.xml"
     ).read_text(encoding="utf-8")
-    assert '<release version="2.6.21" date="2026-07-19">' in metainfo
+    assert '<release version="2.6.22" date="2026-07-20">' in metainfo
 
     desktop = (
         ROOT / "data" / "applications" / "net.techtimejourney.SpinFM.desktop"
@@ -413,7 +413,7 @@ def test_source_launcher_reports_the_release_version() -> None:
         timeout=10,
         env=_subprocess_environment(),
     )
-    assert result.stdout.strip() == "Spin FM 2.6.21"
+    assert result.stdout.strip() == "Spin FM 2.6.22"
     assert result.stderr == ""
 
 
@@ -435,7 +435,7 @@ def test_direct_install_layout_uses_the_same_sources(tmp_path: Path) -> None:
         timeout=10,
         env=_subprocess_environment(),
     )
-    assert result.stdout.strip() == "Spin FM 2.6.21"
+    assert result.stdout.strip() == "Spin FM 2.6.22"
 
 
 def test_supported_launchers_do_not_write_bytecode(tmp_path: Path) -> None:
@@ -493,17 +493,7 @@ def test_debian_rules_do_not_invoke_python_package_builders() -> None:
 
 
 def test_cache_exclusion_is_declared_for_every_distribution_path() -> None:
-    gitignore_path = ROOT / ".gitignore"
-    if gitignore_path.exists():
-        gitignore = gitignore_path.read_text(encoding="utf-8")
-    else:
-        # Some download/copy tools omit dotfiles. The archive builder still
-        # enforces these exclusions independently, so tests remain portable.
-        gitignore = "\n".join((
-            "__pycache__/", "*.pyc", "*.pyo", "*$py.class", ".*_cache/",
-            ".pyright/", ".pytype/", ".venv/", "build/", "dist/",
-            "*.egg-info/", "*.dist-info/", "*.whl",
-        ))
+    gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
     attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
     source_options = (ROOT / "debian/source/options").read_text(encoding="utf-8")
     rules = (ROOT / "debian/rules").read_text(encoding="utf-8")
@@ -527,7 +517,7 @@ def test_cache_exclusion_is_declared_for_every_distribution_path() -> None:
         "*.dist-info/",
         "*.whl",
     ):
-        assert marker in gitignore
+        assert marker in gitignore, f"missing {marker!r} from .gitignore"
     for marker in (
         "__pycache__",
         "*.pyc",
@@ -547,8 +537,10 @@ def test_cache_exclusion_is_declared_for_every_distribution_path() -> None:
         "*.deb",
         "*.dsc",
     ):
-        assert marker in attributes
-        assert marker in source_options
+        assert marker in attributes, f"missing {marker!r} from .gitattributes"
+        assert marker in source_options, (
+            f"missing {marker!r} from debian/source/options"
+        )
 
     assert "PYTHONDONTWRITEBYTECODE=1" in rules
     assert "override_dh_auto_test:\n\t@:" in rules
@@ -598,10 +590,10 @@ def test_source_archive_is_deterministic_and_excludes_dirty_tree_artifacts(
         "coverage_xml": source_root / "coverage.xml",
         "htmlcov": source_root / "htmlcov" / "index.html",
         "build": source_root / "build" / "output.bin",
-        "wheel": source_root / "dist" / "spin_fm-2.6.21-py3-none-any.whl",
+        "wheel": source_root / "dist" / "spin_fm-2.6.22-py3-none-any.whl",
         "egg_info": source_root / "src" / "spin_fm.egg-info" / "PKG-INFO",
         "dist_info": source_root / "src" / "spin_fm.dist-info" / "METADATA",
-        "sdist": source_root / "spin_fm-2.6.21.tar.gz",
+        "sdist": source_root / "spin_fm-2.6.22.tar.gz",
         "debian": source_root / "debian" / "tmp" / "generated-file",
         "venv": source_root / ".venv" / "lib" / "python" / "cached.pyc",
         "venv_plain": source_root / "venv" / "lib" / "cached.pyc",
@@ -631,14 +623,14 @@ def test_source_archive_is_deterministic_and_excludes_dirty_tree_artifacts(
     with ZipFile(archive_one) as archive:
         names = archive.namelist()
         assert names
-        assert all(name.startswith("spin-fm-2.6.21/") for name in names)
+        assert all(name.startswith("spin-fm-2.6.22/") for name in names)
         assert not [name for name in names if _is_excluded_member(name)]
         assert not {PurePosixPath(name).name for name in names}.intersection(
             PYPI_METADATA
         )
         member_modes = {
             PurePosixPath(member.filename)
-            .relative_to("spin-fm-2.6.21")
+            .relative_to("spin-fm-2.6.22")
             .as_posix(): stat.S_IMODE(member.external_attr >> 16)
             for member in archive.infolist()
         }
@@ -672,6 +664,27 @@ def test_source_archive_is_deterministic_and_excludes_dirty_tree_artifacts(
         with pytest.raises(RuntimeError, match="not permitted|packaging metadata"):
             build_archive(source_root, tmp_path / "forbidden.zip")
         forbidden_path.unlink()
+
+
+def test_source_archive_requires_complete_distribution_policy(tmp_path: Path) -> None:
+    source_root = tmp_path / "spin-fm-source"
+    _copy_source_tree(source_root)
+    build_archive = _SOURCE_ARCHIVE["build_archive"]
+
+    attributes = source_root / ".gitattributes"
+    original = attributes.read_text(encoding="utf-8")
+    attributes.unlink()
+    with pytest.raises(RuntimeError, match=r"missing: .*\.gitattributes"):
+        build_archive(source_root, tmp_path / "missing-policy.zip")
+
+    attributes.write_text(
+        original.replace("*.dsc export-ignore\n", ""),
+        encoding="utf-8",
+    )
+    with pytest.raises(
+        RuntimeError, match=r"incomplete distribution exclusion policy.*\*\.dsc"
+    ):
+        build_archive(source_root, tmp_path / "incomplete-policy.zip")
 
 
 def test_final_cleanup_removes_legacy_and_transient_files(tmp_path: Path) -> None:
@@ -781,7 +794,7 @@ def test_cache_symlink_cleanup_never_follows_the_target(tmp_path: Path) -> None:
 def test_source_archive_can_be_written_inside_the_source_tree(tmp_path: Path) -> None:
     source_root = tmp_path / "spin-fm-source"
     _copy_source_tree(source_root)
-    output = source_root / "release" / "spin-fm-2.6.21-source.zip"
+    output = source_root / "release" / "spin-fm-2.6.22-source.zip"
     output.parent.mkdir()
 
     _SOURCE_ARCHIVE["build_archive"](source_root, output)
@@ -796,12 +809,12 @@ def test_source_archive_can_be_written_inside_the_source_tree(tmp_path: Path) ->
 @pytest.mark.parametrize(
     "bad_member",
     (
-        "spin-fm-2.6.21/src/spin_fm/__pycache__/module.pyc",
-        "spin-fm-2.6.21/dist/spin_fm-2.6.21-py3-none-any.whl",
-        "spin-fm-2.6.21/examples/nested/setup.py",
-        "spin-fm-2.6.21/src/spin_fm/__main__.py",
-        "spin-fm-2.6.21/src/spin_fm/empty_trash.py",
-        "spin-fm-2.6.21/README.md.orig",
+        "spin-fm-2.6.22/src/spin_fm/__pycache__/module.pyc",
+        "spin-fm-2.6.22/dist/spin_fm-2.6.22-py3-none-any.whl",
+        "spin-fm-2.6.22/examples/nested/setup.py",
+        "spin-fm-2.6.22/src/spin_fm/__main__.py",
+        "spin-fm-2.6.22/src/spin_fm/empty_trash.py",
+        "spin-fm-2.6.22/README.md.orig",
     ),
 )
 def test_archive_verifier_rejects_excluded_members(
@@ -810,8 +823,8 @@ def test_archive_verifier_rejects_excluded_members(
 ) -> None:
     archive_path = tmp_path / "bad.zip"
     members = {
-        "spin-fm-2.6.21/main.py": b"pass\n",
-        "spin-fm-2.6.21/src/spin_fm/__init__.py": b'__version__ = "2.6.21"\n',
+        "spin-fm-2.6.22/main.py": b"pass\n",
+        "spin-fm-2.6.22/src/spin_fm/__init__.py": b'__version__ = "2.6.22"\n',
         bad_member: b"generated",
     }
     with ZipFile(archive_path, "w", compression=ZIP_DEFLATED) as archive:

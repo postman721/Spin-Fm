@@ -5,7 +5,7 @@ from spin_fm.app import build_parser
 def test_cli_collects_paths() -> None:
     args = build_parser().parse_args(["/tmp/a", "file:///tmp/b"])
     assert args.paths == ["/tmp/a", "file:///tmp/b"]
-    assert __version__ == "2.6.21"
+    assert __version__ == "2.6.22"
 
 
 def test_application_main_invokes_window_setup_once(monkeypatch) -> None:

@@ -1,3 +1,12 @@
+spin-fm (2.6.22) unstable; urgency=medium
+
+  * Restore and require the canonical `.gitattributes` distribution policy.
+  * Validate `.gitattributes`, `.gitignore`, and Debian source exclusions before building source archives.
+  * Require both Git policy files in every published source ZIP.
+  * Add regression coverage for missing or incomplete distribution-policy files.
+
+ -- JJ Posti <jjposti@techtimejourney.net>  Mon, 20 Jul 2026 12:00:00 +0300
+
 spin-fm (2.6.21) unstable; urgency=medium
 
   * Align file-information tests with the intentional MiB-only status format.

@@ -97,6 +97,31 @@ LICENSE_MARKERS = {
     ),
 }
 
+DISTRIBUTION_POLICY_FILES = (
+    ".gitattributes",
+    ".gitignore",
+    "debian/source/options",
+)
+DISTRIBUTION_EXCLUSION_MARKERS = (
+    "__pycache__",
+    "*.pyc",
+    "*.pyo",
+    "*$py.class",
+    ".*_cache",
+    ".pyright",
+    ".pytype",
+    ".venv",
+    "build",
+    "dist",
+    "*.egg-info",
+    "*.dist-info",
+    "*.whl",
+    "debian/tmp",
+    "debian/files",
+    "*.deb",
+    "*.dsc",
+)
+
 
 EXECUTABLE_MANIFEST = Path(__file__).with_name("executable_paths.txt")
 
@@ -234,17 +259,37 @@ def _version_from_source(root: Path) -> str:
 
 
 def _validate_project_layout(root: Path) -> None:
-    missing = [
-        str(path)
-        for path in (
-            root / "LICENSE",
-            root / "main.py",
-            root / "src" / "spin_fm" / "__init__.py",
-        )
-        if not path.is_file()
-    ]
+    required_paths = (
+        root / "LICENSE",
+        root / "main.py",
+        root / "src" / "spin_fm" / "__init__.py",
+        *(root / relative for relative in DISTRIBUTION_POLICY_FILES),
+    )
+    missing = [str(path) for path in required_paths if not path.is_file()]
     if missing:
         raise RuntimeError(f"not a Spin FM source tree; missing: {', '.join(missing)}")
+
+    policy_errors: list[str] = []
+    for relative_name in DISTRIBUTION_POLICY_FILES:
+        policy_path = root / relative_name
+        try:
+            policy_text = policy_path.read_text(encoding="utf-8")
+        except OSError as exc:
+            policy_errors.append(f"{relative_name}: {exc}")
+            continue
+        missing_markers = [
+            marker
+            for marker in DISTRIBUTION_EXCLUSION_MARKERS
+            if marker not in policy_text
+        ]
+        if missing_markers:
+            policy_errors.append(
+                f"{relative_name}: missing {', '.join(missing_markers)}"
+            )
+    if policy_errors:
+        raise RuntimeError(
+            "incomplete distribution exclusion policy: " + "; ".join(policy_errors)
+        )
 
     forbidden: list[str] = []
     for current_root, directories, files in os.walk(root, topdown=True):
@@ -491,6 +536,7 @@ def verify_archive(archive_path: Path) -> tuple[int, int]:
                 f"{root_name}/main.py",
                 f"{root_name}/src/spin_fm/__init__.py",
                 f"{root_name}/tools/executable_paths.txt",
+                *(f"{root_name}/{relative}" for relative in DISTRIBUTION_POLICY_FILES),
                 *(
                     f"{root_name}/{relative.as_posix()}"
                     for relative in CANONICAL_EXECUTABLE_PATHS
