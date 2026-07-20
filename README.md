@@ -22,6 +22,10 @@ Makefile will automatically handle decompress of tar.gz and setup but if you wan
 
 Release archives and the Debian package are produced from the same cache-free source tree. `make tests` runs the Python, syntax, shell, source-archive, and release-hygiene checks; `make all` performs dependency validation, tests, and the Debian build in sequence.
 
+#### Why is spin-fm inside tar.gz in the first place?
+
+This is to prevent corruption and damage to python tests, which will easily happen if the content is exposed directly and user takes a zip download. Now, zip download works and no corruption happens due tar.gz.
+
 ### Archive permissions
 
 No GitHub workflow is required. Git stores executable bits for the launcher and
