@@ -1,0 +1,51 @@
+# Python bytecode and test/tool caches
+__pycache__/
+*.pyc
+*.pyo
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.*_cache/
+.pyright/
+.pytype/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Local environments and generated package output
+.venv/
+venv/
+build/
+dist/
+.eggs/
+pip-wheel-metadata/
+*.egg
+*.egg-info/
+*.dist-info/
+*.whl
+
+# Debian build output
+debian/.debhelper/
+debian/spin-fm/
+debian/tmp/
+debian/files
+debian/*.debhelper*
+debian/*.substvars
+*.build
+*.buildinfo
+*.changes
+*.deb
+*.dsc
+
+# Release archives and transient editor/patch files
+spin-fm-*-source.zip
+spin-fm-*.tar*
+spin_fm-*.tar*
+*.orig
+*.rej
+*.bak
+*~

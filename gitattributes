@@ -1,0 +1,71 @@
+# Normalize text files across Linux, macOS, and Windows checkouts.
+* text=auto eol=lf
+
+*.py text eol=lf
+*.sh text eol=lf
+*.desktop text eol=lf
+*.service text eol=lf
+*.rules text eol=lf
+debian/rules text eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.zip binary
+*.deb binary
+*.tar binary
+*.gz binary
+
+# Keep VCS, caches, local environments, and generated package artifacts out of
+# `git archive` source distributions. tools/source_archive.py independently
+# enforces the same policy and verifies this file before publishing a ZIP.
+.git export-ignore
+.hg export-ignore
+.svn export-ignore
+.pytest_cache export-ignore
+.*_cache export-ignore
+.mypy_cache export-ignore
+.pyright export-ignore
+.pytype export-ignore
+.hypothesis export-ignore
+.tox export-ignore
+.nox export-ignore
+__pycache__ export-ignore
+*.pyc export-ignore
+*.pyo export-ignore
+*$py.class export-ignore
+.coverage export-ignore
+.coverage.* export-ignore
+coverage.xml export-ignore
+htmlcov export-ignore
+.venv export-ignore
+venv export-ignore
+build export-ignore
+dist export-ignore
+.eggs export-ignore
+pip-wheel-metadata export-ignore
+*.egg export-ignore
+*.egg-info export-ignore
+*.dist-info export-ignore
+*.whl export-ignore
+debian/.debhelper export-ignore
+debian/spin-fm export-ignore
+debian/tmp export-ignore
+debian/files export-ignore
+debian/*.debhelper* export-ignore
+debian/*.substvars export-ignore
+*.build export-ignore
+*.buildinfo export-ignore
+*.changes export-ignore
+*.deb export-ignore
+*.dsc export-ignore
+src/spin_fm/__main__.py export-ignore
+src/spin_fm/empty_trash.py export-ignore
+MANIFEST.in export-ignore
+pyproject.toml export-ignore
+setup.py export-ignore
+setup.cfg export-ignore
+*.orig export-ignore
+*.rej export-ignore
+*.bak export-ignore
+*~ export-ignore
