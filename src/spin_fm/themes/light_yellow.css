@@ -1,0 +1,369 @@
+/* Spin FM modern Warm theme */
+* {
+    font-family: "Inter", "Noto Sans", "Segoe UI", sans-serif;
+    font-size: 10pt;
+    color: #342817;
+    selection-background-color: #f6e5bd;
+    selection-color: #342817;
+}
+
+QMainWindow, QWidget {
+    background-color: #fbf8f1;
+}
+
+QMenuBar {
+    background-color: #fffefb;
+    border-bottom: 1px solid #e6dcc7;
+    padding: 3px 8px;
+}
+QMenuBar::item {
+    background: transparent;
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+QMenuBar::item:selected { background-color: #fbf1d9; }
+
+QMenu {
+    background-color: #fffefb;
+    border: 1px solid #e6dcc7;
+    border-radius: 9px;
+    padding: 6px;
+}
+QMenu::item {
+    border-radius: 6px;
+    padding: 7px 28px 7px 10px;
+}
+QMenu::item:selected { background-color: #f6e5bd; }
+QMenu::separator {
+    height: 1px;
+    background: #e6dcc7;
+    margin: 5px 8px;
+}
+
+QWidget#deviceSidebar {
+    background-color: #f6efdf;
+    border-right: 1px solid #e6dcc7;
+}
+QLabel#sidebarTitle, QLabel#dialogTitle {
+    color: #342817;
+    font-size: 17pt;
+    font-weight: 700;
+}
+QLabel#sidebarSubtitle, QLabel#deviceEmptyState, QLabel#dialogDescription {
+    color: #7a6b54;
+}
+QLabel#deviceEmptyState {
+    border: 1px dashed #e6dcc7;
+    border-radius: 12px;
+    padding: 22px;
+}
+
+QToolBar#fileToolbar {
+    background-color: #fffefb;
+    border: 1px solid #e6dcc7;
+    border-radius: 12px;
+    padding: 6px;
+    spacing: 3px;
+}
+QToolButton {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 7px;
+}
+QToolButton:hover {
+    background-color: #fbf1d9;
+    border-color: #e6dcc7;
+}
+QToolButton:pressed { background-color: #f6e5bd; }
+QToolButton:disabled { color: #aea38f; }
+QToolButton#sidebarRefreshButton { padding: 6px; }
+
+QLineEdit#locationBar {
+    background-color: #fffaf0;
+    border: 1px solid #e6dcc7;
+    border-radius: 9px;
+    padding: 8px 12px;
+    margin-left: 6px;
+    min-height: 22px;
+}
+QLineEdit#locationBar:focus {
+    border: 2px solid #ad6f13;
+    padding: 7px 11px;
+}
+
+QTabWidget#fileTabs::pane {
+    background-color: #fffefb;
+    border: 1px solid #e6dcc7;
+    border-radius: 12px;
+    top: -1px;
+}
+QTabBar::tab {
+    background-color: #f6eedc;
+    border: 1px solid #e6dcc7;
+    border-bottom: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 8px 13px;
+    margin-right: 3px;
+    min-width: 78px;
+}
+QTabBar::tab:selected {
+    background-color: #fffefb;
+    color: #ad6f13;
+    font-weight: 600;
+}
+QTabBar::tab:hover:!selected { background-color: #fbf1d9; }
+
+QListView#fileIconView {
+    background-color: #fffefb;
+    border: none;
+    border-radius: 11px;
+    padding: 10px;
+    outline: none;
+}
+QListView#fileIconView::item {
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 8px;
+}
+QListView#fileIconView::item:hover {
+    background-color: #fbf1d9;
+    border-color: #e6dcc7;
+}
+QListView#fileIconView::item:selected {
+    background-color: #f6e5bd;
+    border-color: #ad6f13;
+    color: #342817;
+}
+
+QTableWidget#deviceTable, QTableWidget#trashLocationTable {
+    background: transparent;
+    border: none;
+    outline: none;
+}
+QTableWidget#deviceTable::item, QTableWidget#trashLocationTable::item {
+    border-bottom: 1px solid #e6dcc7;
+    padding: 7px;
+}
+QTableWidget#deviceTable::item:selected, QTableWidget#trashLocationTable::item:selected { background-color: #f6e5bd; }
+QHeaderView::section {
+    background-color: transparent;
+    color: #7a6b54;
+    border: none;
+    border-bottom: 1px solid #e6dcc7;
+    padding: 7px;
+    font-size: 9pt;
+    font-weight: 600;
+}
+
+QPushButton {
+    background-color: #fffaf0;
+    border: 1px solid #e6dcc7;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #fbf1d9;
+    border-color: #ad6f13;
+}
+QPushButton:pressed { background-color: #f6e5bd; }
+QPushButton#deviceActionButton, QPushButton#primaryDialogButton {
+    color: #ad6f13;
+    min-width: 64px;
+    padding: 6px 9px;
+}
+QPushButton:disabled { color: #aea38f; }
+
+QStatusBar#mainStatusBar {
+    background-color: #fffefb;
+    border-top: 1px solid #e6dcc7;
+    padding: 4px 8px;
+}
+QStatusBar::item { border: none; }
+QLabel#diskStatusLabel { color: #7a6b54; padding-left: 10px; }
+QProgressBar#activityProgress {
+    background-color: #fffaf0;
+    border: none;
+    border-radius: 5px;
+}
+QProgressBar#activityProgress::chunk {
+    background-color: #ad6f13;
+    border-radius: 5px;
+}
+
+QSplitter::handle { background-color: #e6dcc7; }
+QSplitter::handle:horizontal { width: 1px; }
+
+QScrollBar:vertical {
+    background: transparent;
+    width: 11px;
+    margin: 3px;
+}
+QScrollBar::handle:vertical {
+    background-color: #d4c5aa;
+    min-height: 30px;
+    border-radius: 5px;
+}
+QScrollBar::handle:vertical:hover { background-color: #7a6b54; }
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: transparent; }
+QScrollBar:horizontal {
+    background: transparent;
+    height: 11px;
+    margin: 3px;
+}
+QScrollBar::handle:horizontal {
+    background-color: #d4c5aa;
+    min-width: 30px;
+    border-radius: 5px;
+}
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0; }
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { background: transparent; }
+
+QMessageBox { background-color: #fffefb; }
+QToolTip {
+    background-color: #342817;
+    color: #ffffff;
+    border: 1px solid #e6dcc7;
+    border-radius: 6px;
+    padding: 5px 7px;
+}
+
+/* Expanded embedded audio player */
+QFrame#audioPlayer {
+    background-color: #fffefb;
+    border: none;
+    border-top: 1px solid #e6dcc7;
+}
+QLabel#audioTrackLabel,
+QLabel#audioPathLabel,
+QLabel#audioTimeLabel,
+QLabel#audioVolumeLabel {
+    background: transparent;
+    border: none;
+}
+QLabel#audioGlyph {
+    color: #ad6f13;
+    background-color: #fffbf2;
+    border: 1px solid #e6dcc7;
+    border-radius: 12px;
+    font-size: 20pt;
+    font-weight: 700;
+}
+QLabel#audioTrackLabel {
+    color: #342817;
+    font-size: 11pt;
+    font-weight: 700;
+}
+QLabel#audioPathLabel {
+    color: #776a55;
+    font-size: 9pt;
+}
+QLabel#audioStateLabel {
+    color: #342817;
+    background-color: #fff6e3;
+    border: 1px solid #e6dcc7;
+    border-radius: 9px;
+    padding: 2px 8px;
+    font-size: 8.5pt;
+    font-weight: 650;
+}
+QLabel#audioOsdBadge,
+QLabel#audioMprisBadge {
+    color: #ad6f13;
+    background-color: #fbf1d9;
+    border: 1px solid #ad6f13;
+    border-radius: 9px;
+    padding: 2px 8px;
+    font-size: 8.5pt;
+    font-weight: 650;
+}
+QLabel#audioTimeLabel,
+QLabel#audioVolumeLabel {
+    color: #776a55;
+    font-size: 9pt;
+    font-weight: 600;
+}
+QToolButton#audioControlButton,
+QToolButton#audioCloseButton,
+QToolButton#audioPrimaryButton {
+    color: #342817;
+    background-color: #fffbf2;
+    border: 1px solid #e6dcc7;
+    border-radius: 9px;
+    padding: 3px;
+}
+QToolButton#audioCloseButton {
+    font-size: 16pt;
+    font-weight: 600;
+    padding: 0;
+}
+QToolButton#audioPrimaryButton {
+    background-color: #fbf1d9;
+    border-color: #ad6f13;
+    border-radius: 12px;
+}
+QToolButton#audioControlButton:hover,
+QToolButton#audioPrimaryButton:hover {
+    background-color: #fbf1d9;
+    border-color: #ad6f13;
+}
+QToolButton#audioControlButton:pressed,
+QToolButton#audioPrimaryButton:pressed {
+    background-color: #fff6e3;
+}
+QToolButton#audioCloseButton:hover {
+    color: #c53d2f;
+    background-color: #fff0ea;
+    border-color: #c53d2f;
+}
+QToolButton#audioControlButton:focus,
+QToolButton#audioCloseButton:focus,
+QToolButton#audioPrimaryButton:focus {
+    border: 2px solid #ad6f13;
+}
+QToolButton#audioControlButton:disabled,
+QToolButton#audioPrimaryButton:disabled {
+    color: #aa9d87;
+    background-color: #fffefb;
+    border-color: #e6dcc7;
+}
+QSlider#audioSeekSlider {
+    min-height: 22px;
+}
+QSlider#audioVolumeSlider {
+    min-height: 20px;
+}
+QSlider#audioSeekSlider::groove:horizontal {
+    height: 7px;
+    background-color: #e6dcc7;
+    border-radius: 3px;
+}
+QSlider#audioVolumeSlider::groove:horizontal {
+    height: 5px;
+    background-color: #e6dcc7;
+    border-radius: 2px;
+}
+QSlider#audioSeekSlider::sub-page:horizontal,
+QSlider#audioVolumeSlider::sub-page:horizontal {
+    background-color: #ad6f13;
+    border-radius: 3px;
+}
+QSlider#audioSeekSlider::handle:horizontal,
+QSlider#audioVolumeSlider::handle:horizontal {
+    background-color: #ffffff;
+    border: 2px solid #ad6f13;
+    width: 15px;
+    height: 15px;
+    margin: -5px 0;
+    border-radius: 8px;
+}
+QSlider#audioSeekSlider:disabled::groove:horizontal {
+    background-color: #fffbf2;
+}
+QSlider#audioSeekSlider:disabled::handle:horizontal {
+    background-color: #fff6e3;
+    border-color: #aa9d87;
+}

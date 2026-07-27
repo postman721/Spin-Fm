@@ -1,188 +1,343 @@
-# Spin FM file manager
+# Spin FM
 
-Spin FM is a lightweight tabbed Qt file manager for Linux with removable-device controls, asynchronous file operations, selected-item metadata, and a seekable embedded audio player. A single click reports the path, file size or recursive folder size, modification time, and MIME information in a persistent status field; double click opens. While an audio track is loaded, Spin FM advertises a native MPRIS player so `playerctl`, desktop media controls, and compatible OSD services can control it.
+Spin FM is a lightweight, keyboard-friendly Qt file manager for Linux with tabs, removable-device support, asynchronous file operations, an embedded music player, and MPRIS integration.
+
+A single click selects an item and displays its information without changing the current folder shown in the location bar. Double-click or press **Enter** to open files and folders.
+
+---
+
+# What's New (2.6.22 → 2.6.33)
+
+## Performance and Memory
+
+* Reduced memory use during long sessions.
+* Better cleanup of closed tabs and completed background tasks.
+* Bounded filesystem, icon, and stylesheet caches.
+* Lower memory use when selecting large numbers of files.
+* Streaming copy, move, Trash, and delete operations instead of building large in-memory lists.
+* Faster cleanup of idle worker threads.
+* Reduced duplicate path tracking during navigation.
+* Improved cleanup of temporary dialogs, callbacks, and background workers.
+* More efficient handling of large folders and large selections.
+
+## File Operations
+
+* Improved multi-file and multi-folder copy, move, and delete.
+* Selecting a parent folder together with its descendants no longer schedules duplicate work.
+* Better handling of large directory trees.
+* Copying an item into its current folder automatically creates a unique name.
+* Same-name conflicts support:
+
+  * Replace
+  * Skip
+  * Keep Both
+  * Apply to All
+* Improved clipboard compatibility between Spin FM windows, separate Spin FM instances, and compatible desktop file managers.
+* Improved Trash handling for local drives and removable media.
+* Safer permanent deletion.
+* Added dedicated **Copy to Folder** and **Move to Folder** actions.
+* Open tabs are updated when their directories are moved or deleted.
+
+## User Interface
+
+* Complete file and folder names are always shown.
+* Long names wrap instead of being shortened with `...`.
+* Clicking a file or folder no longer changes the location bar.
+* File information updates independently from navigation.
+* The location bar changes only after actual navigation.
+* Improved Trash location chooser.
+* Better status information for file operations.
+* Improved removable-device panel behavior.
+* Added toolbar and context-menu actions for:
+
+  * Copy to Folder
+  * Move to Folder
+* Better feedback during long-running operations.
+
+## Drag and Drop
+
+* Normal drag-and-drop **moves** files and folders.
+* Hold the physical **Ctrl key before starting the drag** to enable **Copy mode**.
+* The bottom status bar displays:
+
+> **Copy mode enabled**
+
+while Ctrl is held.
+
+Copy mode works between:
+
+* Spin FM tabs
+* Multiple Spin FM windows
+* Separate Spin FM instances
+* Compatible Linux desktop file managers
+
+## Keyboard and Selection
+
+* `Delete` moves selected items to Trash.
+* `Shift+Delete` permanently deletes selected items after confirmation.
+* Multi-selection works with copy, cut, move, Trash, and permanent delete.
+* `Ctrl+C` copies selected items.
+* `Ctrl+X` cuts selected items.
+* `Ctrl+V` pastes items.
+* `Ctrl+Shift+C` copies the current selection to a chosen folder.
+* `Ctrl+Shift+M` moves the current selection to a chosen folder.
+* Delete-key handling is more reliable when the file view has focus.
+* Holding Ctrl displays the copy-mode indicator before a drag begins.
+
+---
 
 <img width="800" height="600" alt="Image" src="https://github.com/user-attachments/assets/6860d9ec-ef6d-4e19-9cac-b7e53890e6a1" />
 
-Default theme.
-</br>
+**Default theme**
+
+<br>
 
 <img width="800" height="600" alt="spin_music" src="https://github.com/user-attachments/assets/e17ba081-97fa-4964-b1b3-4dccfb005f74" />
 
-Alternative theme and music playback.
-</br>
+**Alternative theme with integrated music playback**
 
+---
 
-## Download and validation
+# Features
 
-Makefile will automatically handle decompress of tar.gz and setup but if you want to have just a raw archive and omit Makefile use:
-    
-    tar xvf <file_name>.tar.gz 
+* Tabbed file browsing
+* Complete filename display
+* Fast asynchronous file operations
+* Multi-file copy, move, Trash, and deletion
+* Native Linux Trash support
+* Trash support for removable media
+* USB mounting and unmounting
+* Cross-instance copy and paste
+* Drag-and-drop move and Ctrl-drag copy
+* Copy to Folder and Move to Folder
+* Recursive folder-size calculation
+* File type, size, and modification information
+* Embedded music player
+* MPRIS and `playerctl` support
+* Multiple application themes
+* Adwaita and other installed icon themes
+* Keyboard shortcuts
+* Long-session memory optimizations
 
+---
 
-Release archives and the Debian package are produced from the same cache-free source tree. `make tests` runs the Python, syntax, shell, source-archive, and release-hygiene checks; `make all` performs dependency validation, tests, and the Debian build in sequence.
+# Installation
 
-#### Why is spin-fm inside tar.gz in the first place?
+## Debian and Ubuntu
 
-This is to prevent corruption and damage to python tests, which will easily happen if the content is exposed directly and user takes a zip download. Now, zip download works and no corruption happens due tar.gz.
-
-### Archive permissions
-
-No GitHub workflow is required. Git stores executable bits for the launcher and
-Debian scripts, and Spin FM's source-archive builder writes audited `0755` modes
-for executable files even when the local checkout has lost them. A damaged
-checkout can be repaired or checked directly with:
-
-```sh
-python3 -B tools/normalize_permissions.py --fix
-python3 -B tools/normalize_permissions.py --check
-```
-
-The repository includes both `.gitignore` and `.gitattributes`. The latter
-normalizes LF line endings and marks caches, virtual environments, and generated
-Debian artifacts with `export-ignore`. The source-archive builder requires and
-validates both files, so an incomplete release archive is rejected before it is
-published.
-
-## Debian installation and packaging
-
-Install the native build and test dependencies:
+Install the runtime dependencies for PyQt 6:
 
 ```sh
 sudo apt update
 sudo apt install \
-  make debhelper dpkg-dev \
-  python3 python3-pyqt6 python3-pyqt6.qtmultimedia \
-  python3-pyudev python3-magic python3-pytest file
+  python3 \
+  python3-pyqt6 \
+  python3-pyqt6.qtmultimedia \
+  python3-pyudev \
+  python3-magic \
+  file \
+  udisks2 \
+  util-linux \
+  xdg-utils \
+  libglib2.0-bin \
+  adwaita-icon-theme \
+  gstreamer1.0-plugins-base \
+  gstreamer1.0-plugins-good \
+  gstreamer1.0-libav
 ```
 
-The public build interface has four targets:
-
-```sh
-make check   # verify commands, Python modules, and debian/control Build-Depends
-make tests   # run tests, syntax/shell checks, and cache/legacy release gates
-make deb     # build and inspect the unsigned Debian binary package
-make all     # run check, tests, and deb in that order
-```
-
-Install the resulting package:
-
-```sh
-sudo apt install ../spin-fm_2.6.22_all.deb
-```
-
-The Debian package installs application-private source under `/usr/share/spin-fm`; it does not build a wheel, sdist, or Python-index package. `make check`, `make deb`, and `make all` validate the PyQt 6 Debian package path.
-
-## Run from source
-
-PyQt 6 is preferred:
+PyQt 5 can be used when PyQt 6 is unavailable:
 
 ```sh
 sudo apt install \
-  python3 python3-pyqt6 python3-pyqt6.qtmultimedia python3-pyudev \
-  python3-magic file udisks2 util-linux xdg-utils libglib2.0-bin adwaita-icon-theme \
-  gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-libav
+  python3 \
+  python3-pyqt5 \
+  python3-pyqt5.qtmultimedia \
+  python3-pyudev \
+  python3-magic \
+  file \
+  udisks2 \
+  util-linux \
+  xdg-utils \
+  libglib2.0-bin \
+  adwaita-icon-theme \
+  gstreamer1.0-plugins-base \
+  gstreamer1.0-plugins-good \
+  gstreamer1.0-libav
 ```
 
-Debian source checkouts also support PyQt 5 when PyQt 6 is unavailable:
+Launch Spin FM from the source directory:
 
 ```sh
-sudo apt install \
-  python3 python3-pyqt5 python3-pyqt5.qtmultimedia python3-pyudev \
-  python3-magic file udisks2 util-linux xdg-utils libglib2.0-bin adwaita-icon-theme \
-  gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-libav
+./bin/spin-fm
 ```
 
-`python3-pyqt5` supplies the Qt Widgets and Qt D-Bus bindings;
-`python3-pyqt5.qtmultimedia` supplies audio playback. Install either the PyQt 6
-or PyQt 5 set, then launch:
+or:
 
 ```sh
-./bin/spin-fm [PATH_OR_URI ...]
+python3 -B main.py
 ```
 
-Equivalent direct launch:
+## Install the Debian Package
+
+Install the package produced by the build:
 
 ```sh
-python3 -B main.py [PATH_OR_URI ...]
+sudo apt install ../spin-fm_2.6.33_all.deb
 ```
 
-`main.py` is the single bootstrap for both source and Debian installations.
-`bin/spin-fm` delegates to it, and `main.py` passes the independent file-info
-installer to the application as a window-setup callback. There is no separate
-`extension_main.py` entry point. Both launch paths disable Python bytecode before
-project modules are imported.
+---
 
-## Usage
+# Arch Linux Dependencies
 
-- Single click selects a file or folder; double click opens it or starts supported audio.
-- A single click also places the complete selected path in the location bar and reports file size or recursive folder-content size, modification time, and MIME information through the independent `file_info_extension` module.
-- `Return` or keypad `Enter` opens the selected item.
-- `Alt+P` toggles embedded play/pause from any non-modal Spin FM view.
-- `Alt+M` toggles player mute.
-- `Ctrl+T` / `Ctrl+W` opens or closes a tab; `Ctrl+L` focuses the location bar.
-- `Ctrl+Up` opens the parent folder; `F5` or `Ctrl+R` refreshes.
-- File and folder labels wrap to show their complete names instead of middle ellipses.
-- The Trash toolbar opens Home Trash directly when it is the only location. When USB or mounted-volume Trash folders exist, it opens a large chooser with clear names and complete paths.
-- `Delete` moves ordinary items to Trash and permanently deletes items already inside a recognized Trash folder.
-- Dropping local files or folders onto a folder asks for confirmation, then moves them like Cut/Paste; same-name destinations always receive an overwrite/skip prompt.
-- `F9` shows or hides the removable-device panel. Its remembered production width keeps Mount and Unmount actions visible.
-- The timeline supports clicks, dragging, keyboard input, the mouse wheel, and 10-second rewind/forward controls when the backend reports seekability.
-- LWM Dark and LWM Graphite are available under **Appearance → Application Theme**.
-- Adwaita is the first-run icon theme when installed; other installed themes remain selectable under **Appearance → Icon Theme**.
-
-Both `.Trash-UID/files` and `.Trash/UID/files` mounted-device layouts are recognized without creating Trash directories during browsing. **File → Empty Trash** empties the desktop Trash through GIO.
-
-Keyboard shortcuts apply while the Spin FM window has focus. 
-
-## Independent file information module
-
-`src/spin_fm/file_info_extension.py` restores the historical
-`on_treeview2_clicked` and `changed(current)` behaviour while remaining an
-independent module. Integration happens in four steps:
-
-1. `bin/spin-fm` launches the standard `main.py` entry point.
-2. `main.py` imports `file_info_extension.install` and passes it to
-   `spin_fm.app.main` as `window_setup`.
-3. The application constructs its normal `MainWindow`, then invokes that setup
-   callback once for the new window.
-4. `FileInfoExtension` connects each existing file view's native
-   `clicked(QModelIndex)` signal and binds newly created tabs when the active tab
-   changes. Each view is connected once and released when its tab is destroyed.
-
-A click resolves the path through that tab's existing `QFileSystemModel`, writes
-the complete path to the location bar, and submits metadata work to one bounded
-worker. Files use `st_size`; folders are scanned recursively with `os.scandir`
-without following child symlinks or crossing into another mounted filesystem.
-A newer click cancels a stale folder scan and retains only the latest pending
-request.
-
-Results are written to a normal, right-elided status field beside the disk
-indicator. The size is placed first, so it remains visible even when the status
-bar is narrow. The complete path stays in the location bar and is intentionally
-not duplicated in the status text. Copy, move, device, and other core status
-messages temporarily replace
-this field and the selected-item information returns afterward. Folder results
-include logical content size, file/folder counts, and a partial-result warning
-when entries are inaccessible.
-
-The module supports the official `python3-magic` `Magic` class and
-module-level `from_file` APIs, structured-result bindings, and the legacy
-libmagic cookie API. It preserves MIME encodings when available, supports older
-bytes-path bindings, and then uses safe filename and `file(1)` fallbacks. A
-broken or conflicting `magic` module cannot suppress the independently available
-size and timestamp result. Selection state stays on the extension instance
-rather than in a process-global variable. The compatibility parent callback
-delegates to Spin FM's existing navigation history instead of replacing the
-shared file system model. Automatic loading can be disabled for troubleshooting with:
+Install the recommended PyQt 6 dependencies:
 
 ```sh
-SPIN_FM_FILE_INFO=0 spin-fm
+sudo pacman -S --needed \
+  python \
+  python-pyqt6 \
+  qt6-multimedia \
+  qt6-multimedia-ffmpeg \
+  python-pyudev \
+  python-magic \
+  file \
+  udisks2 \
+  util-linux \
+  xdg-utils \
+  glib2 \
+  adwaita-icon-theme \
+  dbus
 ```
 
-## Desktop player and Wayland_OSD
+Use `qt6-multimedia-gstreamer` instead of the FFmpeg multimedia backend when preferred and available.
 
-When a track is loaded, Spin FM registers `org.mpris.MediaPlayer2.spin_fm` on the user session bus. Multiple instances use a process-specific suffix. Playback status, metadata, position, seeking, and player volume are exposed through the standard MPRIS 2 interface.
+Package names can vary between Arch Linux repositories and derivatives.
+
+---
+
+# Fedora Dependencies
+
+Install the recommended dependencies:
+
+```sh
+sudo dnf install \
+  python3 \
+  python3-pyqt6 \
+  qt6-qtmultimedia \
+  python3-pyudev \
+  python3-magic \
+  file \
+  udisks2 \
+  util-linux \
+  xdg-utils \
+  glib2 \
+  adwaita-icon-theme \
+  dbus-daemon \
+  gstreamer1-plugins-base \
+  gstreamer1-plugins-good
+```
+
+Additional multimedia codecs may be needed for some audio formats.
+
+---
+
+# Usage
+
+## Navigation
+
+* Single-click selects a file or folder and displays its information.
+* Double-click or press **Enter** to open the selected item.
+* Single-clicking an item does not change the location bar.
+* `Ctrl+L` focuses the location bar.
+* `Ctrl+Up` opens the parent folder.
+* `Ctrl+T` opens a new tab.
+* `Ctrl+W` closes the current tab.
+* `F5` or `Ctrl+R` refreshes the current folder.
+* `F9` shows or hides the removable-device panel.
+
+## Copy and Move
+
+Use the standard shortcuts:
+
+* `Ctrl+C` — Copy
+* `Ctrl+X` — Cut
+* `Ctrl+V` — Paste
+
+You can also use:
+
+* **Copy to Folder**
+* **Move to Folder**
+
+from the toolbar or context menu.
+
+Their shortcuts are:
+
+* `Ctrl+Shift+C` — Copy to Folder
+* `Ctrl+Shift+M` — Move to Folder
+
+When a destination already contains an item with the same name, Spin FM can:
+
+* Replace it
+* Skip it
+* Keep both items
+* Apply the choice to all remaining conflicts
+
+## Drag-and-Drop Copy Mode
+
+> **Important:** Press and hold **Ctrl before you start dragging** when you want to copy instead of move.
+
+While Ctrl is held, the bottom status bar displays:
+
+> **Copy mode enabled**
+
+Normal drag-and-drop moves files.
+
+Holding Ctrl before dragging copies files.
+
+Release Ctrl to return to Move mode.
+
+## Delete
+
+Press:
+
+* `Delete` to move the selected items to Trash
+* `Shift+Delete` to permanently delete the selected items after confirmation
+
+Files already inside a recognized Trash folder are permanently removed when deleted.
+
+## Selecting Multiple Items
+
+Multi-selection works with:
+
+* Copy
+* Cut
+* Paste
+* Copy to Folder
+* Move to Folder
+* Trash
+* Permanent deletion
+
+When a selected parent folder already contains another selected item, Spin FM processes the parent only and avoids duplicate work.
+
+---
+
+# Music Player
+
+Spin FM includes an embedded, seekable audio player.
+
+Shortcuts:
+
+* `Alt+P` — Play or pause
+* `Alt+M` — Mute or unmute
+
+When a track is loaded, Spin FM exposes an MPRIS interface. This allows playback control through:
+
+* `playerctl`
+* Desktop media keys
+* Compatible desktop media controls
+* Compatible on-screen display services
+
+Example commands:
 
 ```sh
 playerctl --list-all | grep spin_fm
@@ -190,56 +345,140 @@ playerctl --player=spin_fm status
 playerctl --player=spin_fm play-pause
 ```
 
-This is the integration Wayland_OSD and desktop media controls use to recognize Spin FM as an active player. The existing direct Wayland_OSD socket notifications remain best-effort. A missing session bus, Qt D-Bus module, Wayland_OSD executable, or daemon socket never prevents local playback or closes the application.
+A missing MPRIS session bus or external OSD service does not prevent local playback.
 
-Optional Wayland_OSD controls:
+---
+
+# Trash and Removable Devices
+
+Spin FM supports the normal desktop Trash and recognized Trash locations on mounted devices.
+
+Supported mounted-device layouts include:
 
 ```text
-SPIN_FM_WAYLAND_OSD=0
+.Trash-UID/files
+.Trash/UID/files
+```
+
+Spin FM does not create Trash folders while browsing.
+
+When more than one Trash location is available, the Trash button opens a chooser showing clear location names and complete paths.
+
+Use **File → Empty Trash** to empty the desktop Trash through GIO.
+
+---
+
+# Themes
+
+Spin FM includes multiple application themes.
+
+Available themes include:
+
+* LWM Dark
+* LWM Graphite
+
+Change the application theme through:
+
+**Appearance → Application Theme**
+
+Installed icon themes are available through:
+
+**Appearance → Icon Theme**
+
+Adwaita is used as the first-run icon theme when installed.
+
+---
+
+# Build Commands
+
+Install the Debian build tools:
+
+```sh
+sudo apt update
+sudo apt install make debhelper dpkg-dev python3
+```
+
+Available build commands:
+
+```sh
+make check
+```
+
+Checks required packaging commands and Debian build dependencies.
+
+```sh
+make verify
+```
+
+Runs syntax, shell, permissions, archive, cache, and release-hygiene checks.
+
+```sh
+make deb
+```
+
+Builds and inspects the unsigned Debian package.
+
+```sh
+make all
+```
+
+Runs `check`, `verify`, and `deb` in sequence.
+
+Runtime tests and pytest are intentionally not included in the 2.6.33 release.
+
+---
+
+# Configuration
+
+Qt stores Spin FM settings below:
+
+```text
+~/.config/Spin/
+```
+
+The normal settings file is:
+
+```text
+~/.config/Spin/Spin FM.conf
+```
+
+---
+
+# Troubleshooting
+
+Disable the independent file-information module temporarily with:
+
+```sh
+SPIN_FM_FILE_INFO=0 spin-fm
+```
+
+Disable Wayland OSD integration with:
+
+```sh
+SPIN_FM_WAYLAND_OSD=0 spin-fm
+```
+
+Optional Wayland OSD settings:
+
+```text
 SPIN_FM_WAYLAND_OSD_COMMAND=/path/to/wayland-volume-osd
 SPIN_FM_WAYLAND_OSD_THEME=dark|blue|grey|wood
 ```
 
-## Arch Linux dependencies (best effort)
+Distribution package names and multimedia backends can vary. Install the equivalent Qt Widgets, Qt D-Bus, Qt Multimedia, `pyudev`, `python-magic`, GIO, and audio-codec packages for your distribution.
 
-```sh
-sudo pacman -S --needed \
-  python python-pyqt6 qt6-multimedia qt6-multimedia-ffmpeg python-pyudev \
-  python-magic file udisks2 util-linux xdg-utils glib2 adwaita-icon-theme dbus
-sudo pacman -S --needed python-pytest   # only for make tests
-```
+---
 
-Use `qt6-multimedia-gstreamer` instead of the FFmpeg backend when preferred and available.
+# License
 
-## Fedora dependencies (best effort)
+Spin FM is GPL-2.0-or-later
 
-```sh
-sudo dnf install \
-  python3 python3-pyqt6 qt6-qtmultimedia python3-pyudev python3-magic file \
-  udisks2 util-linux xdg-utils glib2 adwaita-icon-theme dbus-daemon \
-  gstreamer1-plugins-base gstreamer1-plugins-good
-sudo dnf install python3-pytest   # only for make tests
-```
+See:
 
-## Notable improvements
+- `LICENSE`
+- `debian/copyright`
 
-- UI has been designed again to be more informative.
-- Trash for removable media + normal SSD deletion.
-- Drag and drop now matches cut and paste.
-- Integrated music player that works together with my Wayland-OSD project - or any other OSD that sees playerctl
-- More shortkeys and UI elements that can be hidden.
-- LWM matching themes added (upcoming Wayland compositor based upon Labwc).
-- Debian packaging added via Makefile.
+Author: **JJ Posti**  
+Website: https://techtimejourney.net
 
-<b>Distribution package names and codec backends can vary; use the equivalent PyQt 6 Core/Widgets/D-Bus, Qt Multimedia, pyudev, python-magic, and audio-backend packages when needed.</b>
 
-## Configuration location
-Qt stores settings below `~/.config/Spin/` (normally `Spin FM.conf`).
-
-## Release hygiene
-
-All project-controlled launch, test, archive, and Debian paths use `-B`, `PYTHONDONTWRITEBYTECODE=1`, or an early `sys.dont_write_bytecode` assignment. Release gates remove and reject `__pycache__`, `.pyc`, `.pyo`, tool caches, wheel/sdist metadata, retired modules, Debian staging output, patch rejects, and editor backups.
-
-Spin FM is GPL-2.0-or-later. See `LICENSE` and `debian/copyright`.
-
-Author JJ Posti <techtimejourney.net>
